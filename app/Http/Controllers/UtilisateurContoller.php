@@ -196,11 +196,11 @@ class UtilisateurContoller extends Controller
                     return response()->json(['status'=>1, 'result'=>$login]);
 
                 }else{
-                    return response()->json(['status'=>1, 'result'=>'Login ou Mot de passe incorrecte 2']);
+                    return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte 2']);
                 }
 
             }else{
-                return response()->json(['status'=>1, 'result'=>'Login ou Mot de passe incorrecte']);
+                return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte']);
             }
         } catch (\Throwable $th) {
            //return response()->json(['status'=>1, 'result'=>$login]);
