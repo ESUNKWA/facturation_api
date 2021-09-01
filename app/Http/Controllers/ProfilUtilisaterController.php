@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\rc;
+use App\Models\Profil;
 use Illuminate\Http\Request;
 
 class ProfilUtilisaterController extends Controller
@@ -14,7 +15,10 @@ class ProfilUtilisaterController extends Controller
      */
     public function index()
     {
-        //
+        //Liste des profils
+        $profils = Profil::all();
+        $data = [ "status" => 1, "result" => $profils ];
+        return response()->json($data, 200);
     }
 
     /**

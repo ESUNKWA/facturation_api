@@ -1,0 +1,29 @@
+[33mcommit ce4d80c74eb9479e08b6dbfefb2150a2237ed025[m[33m ([m[1;36mHEAD -> [m[1;32mgestionProfil[m[33m)[m
+Author: ESUNKWA <kouadiodeki@gmail.com>
+Date:   Wed Sep 1 22:11:47 2021 +0000
+
+    Migration vers la table profil
+
+[33mcommit 36e7c5609cd844f98ceb47f16dad01bdbfd01d71[m
+Author: ESUNKWA <kouadiodeki@gmail.com>
+Date:   Wed Sep 1 21:57:12 2021 +0000
+
+    Création du controller profil
+
+[33mcommit ef6ef45077e80b98556980a17fbca8b71da2108c[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: ESUNKWA <kouadiodeki@gmail.com>
+Date:   Wed Sep 1 21:51:34 2021 +0000
+
+    api de saisie des utilisateur
+
+[33mcommit 26e1fa7e4d58cf739aa94032ee90f7c41fcd640b[m
+Author: ESUNKWA <kouadiodeki@gmail.com>
+Date:   Thu Aug 26 15:42:47 2021 +0000
+
+    Controller user
+
+[33mcommit 824329df32cfcbdb97383232d9e731220b81b51e[m
+Author: rescue-dev <rescue-dev@mediasoftci.net>
+Date:   Tue Aug 24 12:13:16 2021 +0000
+
+    Création, liste et connexion des utilisateurs

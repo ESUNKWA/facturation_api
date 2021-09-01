@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UtilisateurContoller;
+use App\Http\Controllers\ProfilUtilisaterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +22,6 @@ use App\Http\Controllers\UtilisateurContoller;
 Route::get('utilisateur/list', [UtilisateurContoller::class,'index'])->name('get_users');
 Route::post('utilisateur/register', [UtilisateurContoller::class,'store'])->name('add_users');
 Route::post('utilisateur/login', [UtilisateurContoller::class,'login']);
+
+//Proifl utilisateur
+Route::get('profil/list', [ProfilUtilisaterController::class,'index']);
