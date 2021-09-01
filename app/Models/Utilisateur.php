@@ -9,7 +9,7 @@ class Utilisateur extends Model
 {
     use HasFactory;
 
-    protected $table = 'sc_gestion.utilisateurs';
+    protected $table = 'utilisateurs';
     protected $primaryKey = 'r_i';
     protected $fillable = ["r_nom","r_prenoms","r_email","r_phone","r_description","r_img","r_login"];
 }

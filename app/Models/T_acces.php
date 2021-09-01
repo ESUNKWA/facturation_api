@@ -9,7 +9,7 @@ class T_acces extends Model
 {
     use HasFactory;
 
-    protected $table = 'sc_gestion.t_acces';
+    protected $table = 't_acces';
     protected $primaryKey = 'r_i';
     protected $fillable = ['r_utilisateur', 'r_mdp', 'r_status'];
 }

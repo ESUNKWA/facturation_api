@@ -7,6 +7,7 @@ use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class UtilisateurContoller extends Controller
 {
@@ -46,7 +47,7 @@ class UtilisateurContoller extends Controller
     {
 
         //Controlle des champs
-
+        
         $inputs = $request->all();//Récupère tous champs du formulaire
 
         $errors = [
@@ -99,7 +100,7 @@ class UtilisateurContoller extends Controller
 
                 $insertAcces = T_acces::create([
                     'r_utilisateur' => $insertion->r_i,
-                    'r_mdp'         => bcrypt($request->password),
+                    'r_mdp'         => $request->password,
                     'r_status'      => 1
                 ]);
 
@@ -185,18 +186,16 @@ class UtilisateurContoller extends Controller
         $login = Utilisateur::where('r_login', $request->p_login)->get();
 
         try {
-            if( !count($login) == 0 ){
+            if( count($login) !== 0 ){
+                
+               $acces = T_acces::where('r_utilisateur', $login[0]->r_i)->get();
 
-                $acces = T_acces::where('r_utilisateur', $login[0]->r_i)
-                                    ->where('r_mdp', $request->p_mdp)
-                                    ->get();
-
-                if( !count($acces) == 0 ){
+                if( $acces[0]->r_mdp === $request->p_mdp ){
 
                     return response()->json(['status'=>1, 'result'=>$login]);
 
                 }else{
-                    return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte 2']);
+                    return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte !']);
                 }
 
             }else{
