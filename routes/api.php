@@ -25,3 +25,4 @@ Route::post('utilisateur/login', [UtilisateurContoller::class,'login']);
 
 //Proifl utilisateur
 Route::get('profil/list', [ProfilUtilisaterController::class,'index']);
+Route::post('profil/register', [ProfilUtilisaterController::class,'store']);

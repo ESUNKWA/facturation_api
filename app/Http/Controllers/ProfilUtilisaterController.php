@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\rc;
 use App\Models\Profil;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProfilUtilisaterController extends Controller
 {
@@ -16,7 +17,7 @@ class ProfilUtilisaterController extends Controller
     public function index()
     {
         //Liste des profils
-        $profils = Profil::all();
+        $profils = Profil::orderBy('r_libelle', 'ASC')->get();
         $data = [ "status" => 1, "result" => $profils ];
         return response()->json($data, 200);
     }
@@ -28,7 +29,7 @@ class ProfilUtilisaterController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -39,7 +40,44 @@ class ProfilUtilisaterController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Controlle des champs
+        $inputs = $request->all();
+
+        $errors = [
+            'r_libelle' => 'required|unique:t_profil',
+        ];
+
+        $erreurs = [
+            'r_libelle.required' => 'Le libellé est réquis',
+            'r_libelle.unique' => 'Ce nom de profil existe déjà',
+        ];
+
+        $validate = Validator::make( $inputs, $errors, $erreurs);
+
+        if( $validate->fails() ){
+            return $validate->errors();
+        }else{
+            $insert = Profil::create([
+                'r_libelle' => $request->r_libelle,
+                'r_description' => $request->p_description,
+                'r_status' => 1
+             ]);
+            if( $insert ){
+                $data = [
+                    "status" => 1,
+                    "result" => "Profil enregistré avec succès",
+                ];
+               return response()->json($data, 200);
+            }else{
+                $data = [
+                    "status" => 0,
+                    "result" => "Une erreur est survenue lors de l'enregistrement du profil",
+                ];
+                return response()->json($data, 200);
+            }
+        }
+
+    
     }
 
     /**
