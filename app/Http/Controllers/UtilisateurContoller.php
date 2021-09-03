@@ -85,6 +85,7 @@ class UtilisateurContoller extends Controller
                         'r_description' => $request->p_description,
                         'r_img'         => $request->p_img,
                         'r_login'       => $request->p_login,
+                        'r_profil'       => 1
                         ]
                     );
 
