@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\UtilisateurContoller;
 use App\Http\Controllers\ProfilUtilisaterController;
 
@@ -26,3 +27,6 @@ Route::post('utilisateur/login', [UtilisateurContoller::class,'login']);
 //Proifl utilisateur
 Route::get('profil/list', [ProfilUtilisaterController::class,'index']);
 Route::post('profil/register', [ProfilUtilisaterController::class,'store']);
+
+//Catégorie
+Route::get('categorie/list', [CategorieController::class,'index']);
