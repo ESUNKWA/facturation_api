@@ -9,4 +9,6 @@ class Categorie extends Model
 {
     use HasFactory;
     protected $table = 't_categorie';
+    protected $primaryKey = 'r_i';
+    protected $fillable = ['r_libelle', 'r_description', 'r_status'];
 }

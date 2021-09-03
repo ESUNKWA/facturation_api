@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\cr;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CategorieController extends Controller
 {
+    
+    private $afficheError = "Une erreur est survenue !";
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +20,12 @@ class CategorieController extends Controller
     {
         //Liste des catégories de produits
         $produits = Categorie::all();
-        dd($produits);
+        if( $produits ){
+            return response()->json(["status"=>1, "result" => $produits], 200);
+        }else{
+            return response()->json(["status"=>0, "result" => $this->afficheError], 200);
+        }
+       
     }
 
     /**
@@ -38,7 +46,56 @@ class CategorieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Saisie des catégories
+
+        $inputs = $request->all();
+
+        $errors = [
+            "r_libelle" => "required|unique:t_categorie"
+        ];
+
+        $erreurs = [
+            "r_libelle.required" => "Le libellé du produit est réquis",
+            "r_libelle.unique" => "Catégorie déjà existante"
+        ];
+
+        //Controlle des champs
+        $validate = Validator::make($inputs, $errors, $erreurs);
+
+        if( $validate->fails() ){
+
+            return $validate->errors();
+
+        }else{
+
+            $insert = Categorie::create([
+
+                "r_libelle" => $request->r_libelle,
+                "r_description" => $request->p_description,
+                "r_status" => 1
+    
+            ]);
+    
+            if( $insert ){
+    
+                $responseData = [
+                    "status" => 0,
+                    "result" => "Enregistrement éffectué avec succes !",
+                ];
+    
+                return response()->json($responseData, 200);
+            }else{
+                $responseData = [
+                    "status" => 0,
+                    "result" => $this->afficheError,
+                ];
+    
+                return response()->json($responseData, 200);
+            }
+
+        }
+
+       
     }
 
     /**
