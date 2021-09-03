@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\UtilisateurContoller;
 use App\Http\Controllers\ProfilUtilisaterController;
@@ -31,3 +32,7 @@ Route::post('profil/register', [ProfilUtilisaterController::class,'store']);
 //Catégorie
 Route::get('categorie/list', [CategorieController::class,'index']);
 Route::post('categorie/register', [CategorieController::class,'store']);
+
+//Produits
+Route::get('produit/list', [ProduitController::class,'index']);
+Route::post('produit/register', [ProduitController::class,'store']);
