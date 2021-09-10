@@ -2,10 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\UtilisateurContoller;
 use App\Http\Controllers\ProfilUtilisaterController;
+use App\Http\Controllers\FactureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,3 +38,10 @@ Route::post('categorie/register', [CategorieController::class,'store']);
 //Produits
 Route::get('produit/list', [ProduitController::class,'index']);
 Route::post('produit/register', [ProduitController::class,'store']);
+
+//Clients
+//Route::resource('client', ClientController::class);
+Route::post('client/register', [ClientController::class,'store']);
+
+Route::post('facture/register', [FactureController::class,'store']);
+Route::get('facture/list', [FactureController::class,'index']);
