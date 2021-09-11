@@ -119,9 +119,26 @@ class ProduitController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function edit(cr $cr)
+    public function edit(Request $request)
     {
-        //
+        //Modification
+        $updateProduit = Produit::find($request->p_idproduit);
+
+        $updateProduit->update([
+            "r_categorie"  => $request->p_categorie,
+            "r_libelle" => $request->p_libelle,
+            "r_stock" => $request->p_stock,
+            "r_description" => $request->p_description
+        ]);
+
+        $res = [
+    
+            "status" => 1,
+            "result" => "Modification effectuée avec succès !",
+
+        ];
+        return response()->json($res, 200);
+
     }
 
     /**

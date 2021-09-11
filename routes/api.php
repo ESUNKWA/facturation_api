@@ -38,6 +38,7 @@ Route::post('categorie/register', [CategorieController::class,'store']);
 //Produits
 Route::get('produit/list', [ProduitController::class,'index']);
 Route::post('produit/register', [ProduitController::class,'store']);
+Route::put('produit/edit', [ProduitController::class,'edit']);
 
 //Clients
 //Route::resource('client', ClientController::class);

@@ -18,7 +18,7 @@ class FactureController extends Controller
     public function index()
     {
         //Liste des factures
-        $factures = Facture::orderBy('created_at', 'ASC')->get();
+        $factures = Facture::orderBy('created_at', 'DESC')->get();
         $response = [
             "status" => 1,
             "result" => $factures
@@ -45,7 +45,8 @@ class FactureController extends Controller
     public function store(Request $request)
     {
         //DB::beginTransaction();
-
+        
+        
         //Saisie un client
         $insert = Client::create([
 
@@ -61,8 +62,11 @@ class FactureController extends Controller
          //Saisie facture
         if( $insert->r_i ){
 
+            $latestOrder = Facture::orderBy('r_i')->count(); // Avoir le nombre d'enregistrement des factures
+            $numFacture = date('y')."-".str_pad($latestOrder+1, 5, "0", STR_PAD_LEFT);
+
                 $insertFacture = Facture::create([
-                "r_num" =>"11112",
+                "r_num" => $numFacture,
                 "r_client"=>$insert->r_i,
                 "r_mnt"=>$request->p_mnt
                 ]);
@@ -100,7 +104,7 @@ class FactureController extends Controller
                             $data = [
 
                                 "status" => 1,
-                                "result" => "La facture numéro à bien été enregistrée"
+                                "result" => "La facture numéro à [ " . $numFacture . " ] bien été enregistrée"
 
                             ];
 
