@@ -43,10 +43,10 @@ class UtilisateurContoller extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+     //Ajout des utilisateur
     public function store(Request $request)
     {
-
-        //Controlle des champs
         
         $inputs = $request->all();//Récupère tous champs du formulaire
 

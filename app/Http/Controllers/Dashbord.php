@@ -1,21 +1,36 @@
 <?php
 
-namespace App\Http\Controllers\facturation;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\cr;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class DetailsFactureController extends Controller
+class Dashbord extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($date)
     {
-        
+        //Tableau de bord
+        $dashData = DB::select("SELECT CONVERT(SUM(fac.r_mnt),integer) as facturejr,
+        (SELECT CONVERT(SUM(r_montant),integer) FROM t_reglement_partiele WHERE LEFT(created_at,10) = ? ) as rglejr,
+        ( SELECT COUNT(r_i) FROM t_clients WHERE LEFT(created_at,10) = ? ) as nbreClientJour,
+        ( SELECT COUNT(r_i) FROM t_factures WHERE LEFT(created_at,10) = ? ) as nbreFactureJr,
+        ( SELECT JSON_OBJECT('nbreFactureNonSolderJr',COUNT(r_i), 'mntTotal',SUM(r_mnt)) FROM t_factures WHERE LEFT(created_at,10) = ? and r_status = 0 ) as FactureNonSolderJr
+        FROM t_factures fac  where LEFT(created_at,10) = ? and fac.r_status = 1;", [$date, $date,$date, $date, $date]);
+
+        $data = [
+
+            "status" => 1,
+            "result" => $dashData
+
+        ];
+
+        return response()->json($data, 200);
     }
 
     /**

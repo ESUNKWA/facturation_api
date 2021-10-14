@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Produit extends Model
+class ReglementPartiel extends Model
 {
     use HasFactory;
-    protected $table = 't_produit';
+    protected $table = 't_reglement_partiele';
     protected $primaryKey = 'r_i';
-    protected $fillable = ['r_categorie', 'r_libelle', 'r_stock', 'r_prix_vente', 'r_description', 'r_status'];
+    protected $fillable = ['r_facture','r_montant','r_date_eng','r_date_modif'];
 }

@@ -19,8 +19,8 @@ class ClientController extends Controller
         //Liste des clients
         $clients = Client::orderBy('r_nom', 'ASC')->get();
         $responseDatas = [
-          "r_status" => 1,
-          "r_result" => $clients
+          "status" => 1,
+          "result" => $clients
         ];
         
         return response()->json($responseDatas, 200);

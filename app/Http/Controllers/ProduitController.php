@@ -73,6 +73,7 @@ class ProduitController extends Controller
                 "r_categorie"   => $request->p_categorie,
                 "r_libelle"     => $request->r_libelle,
                 "r_stock"       => $request->p_stock,
+                "r_prix_vente"  => $request->p_prix_vente,
                 "r_description" => $request->p_description,
                 "r_status"      => 1
             ]);
@@ -122,12 +123,14 @@ class ProduitController extends Controller
     public function edit(Request $request)
     {
         //Modification
+        
         $updateProduit = Produit::find($request->p_idproduit);
-
+       
         $updateProduit->update([
             "r_categorie"  => $request->p_categorie,
-            "r_libelle" => $request->p_libelle,
+            "r_libelle" => $request->r_libelle,
             "r_stock" => $request->p_stock,
+            "r_prix_vente"  => $request->p_prix_vente,
             "r_description" => $request->p_description
         ]);
 
@@ -151,6 +154,21 @@ class ProduitController extends Controller
     public function update(Request $request, cr $cr)
     {
         //
+    }
+
+    public function ajout_stock(Request $request){
+       
+        $updateStockProduit = Produit::find($request->p_idproduit);
+       
+        $updateStockProduit->update([
+            "r_stock" => $request->p_quantite
+        ]);
+
+        $res = [
+            "status" => 1,
+            "result" => "La quantité du produit à évoluée !"
+        ];
+        return response()->json($res, 200);
     }
 
     /**

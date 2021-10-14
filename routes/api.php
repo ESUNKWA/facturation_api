@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Dashbord;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\FactureController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\UtilisateurContoller;
 use App\Http\Controllers\ProfilUtilisaterController;
-use App\Http\Controllers\FactureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,10 +40,18 @@ Route::post('categorie/register', [CategorieController::class,'store']);
 Route::get('produit/list', [ProduitController::class,'index']);
 Route::post('produit/register', [ProduitController::class,'store']);
 Route::put('produit/edit', [ProduitController::class,'edit']);
+Route::put('produit/ajout_stock', [ProduitController::class,'ajout_stock']);
 
 //Clients
 //Route::resource('client', ClientController::class);
 Route::post('client/register', [ClientController::class,'store']);
+Route::get('client/list', [ClientController::class,'index']);
 
 Route::post('facture/register', [FactureController::class,'store']);
 Route::get('facture/list', [FactureController::class,'index']);
+Route::get('facture/detail/{id}', [FactureController::class,'show']);
+Route::get('facture/liste_facture_client/{id}', [FactureController::class,'liste_facture_client']);
+Route::post('facture/reglement_partiel/{id}/{mnt}/{solder}', [FactureController::class,'reglement_partiel']);
+
+//Dashbord
+Route::get('dashbord/{date}', [Dashbord::class,'index']);

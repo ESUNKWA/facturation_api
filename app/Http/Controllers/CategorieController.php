@@ -79,7 +79,7 @@ class CategorieController extends Controller
             if( $insert ){
     
                 $responseData = [
-                    "status" => 0,
+                    "status" => 1,
                     "result" => "Enregistrement éffectué avec succes !",
                 ];
     
