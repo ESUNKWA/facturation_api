@@ -8,6 +8,7 @@ use App\Http\Controllers\FactureController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\UtilisateurContoller;
+use App\Http\Controllers\PartenairesController;
 use App\Http\Controllers\ProfilUtilisaterController;
 
 
@@ -51,3 +52,6 @@ Route::put('facture/update_status_facture/{status}', [FactureController::class,'
 
 //Dashbord
 Route::get('dashbord/{date}', [Dashbord::class,'index']);
+
+//Partenaires
+Route::resource('partenaire', PartenairesController::class);
