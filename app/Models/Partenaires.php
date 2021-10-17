@@ -10,5 +10,5 @@ class Partenaires extends Model
     use HasFactory;
     protected $table = 't_partenaire';
     protected $primaryKey = 'r_i';
-    protected $filables = ['r_code','r_nom','r_ville','r_quartier','r_situation_geo','r_status'];
+    protected $fillable = ['r_code','r_nom','r_ville','r_quartier','r_situation_geo','r_status'];
 }

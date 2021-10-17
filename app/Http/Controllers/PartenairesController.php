@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\cr;
 use App\Models\Partenaires;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PartenairesController extends Controller
 {
@@ -41,7 +42,49 @@ class PartenairesController extends Controller
      */
     public function store(Request $request)
     {
-        
+        //Récupération des données provenant du serveur
+        $inputs = $request->all();
+
+        //Controlle des champs
+
+        $errors = [
+            'p_code'=>'required',
+            'p_nom'=>'required'
+        ];
+        $erreurs = [
+            'p_code.required'=>'Le code est réquis',
+            'p_nom.required'=>'Le nom du partenaire est réquis',
+        ];
+
+        $validator = Validator::make($inputs, $errors, $erreurs);
+
+        if( $validator->fails() ){
+            return $validator->errors();
+        }else{
+
+            $partenaires = Partenaires::create([
+                'r_code'            => $request->p_code,
+                'r_nom'             => $request->p_nom,
+                'r_ville'           => $request->p_ville,
+                'r_quartier'        => $request->p_quartier,
+                'r_situation_geo'   => $request->p_stua_geo,
+                'r_status'          => 0
+            ]);
+    
+            if( isset($partenaires->r_i) ){
+                $data = [
+                    "status" => 1,
+                    "result" => "Enregistrement effectué avec succès"
+                ];
+            }else{
+                $data = [
+                    "status" => 0,
+                    "result" => "Une erreur est survenue lors de l'enregistrement"
+                ];
+            }
+            return response()->json($data,200);
+
+        }
     }
 
     /**
