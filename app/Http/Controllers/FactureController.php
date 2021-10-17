@@ -18,12 +18,13 @@ class FactureController extends Controller
      * @return \Illuminate\Http\Response
      */
     //Ventes du jours
-    public function index()
+    public function index($iscmd)
     {
         //Liste des factures
         $factures = DB::table('t_clients')
             ->join('t_factures', 't_clients.r_i', '=', 't_factures.r_client')
             ->select('t_clients.*', 't_factures.*')
+            ->where('t_factures.r_cmd','=',$iscmd)
             ->orderBy('t_factures.created_at', 'DESC')
             ->get();
         //$factures = Facture::orderBy('created_at', 'DESC')->get();
@@ -90,11 +91,18 @@ class FactureController extends Controller
             $latestOrder = Facture::orderBy('r_i')->count(); // Avoir le nombre d'enregistrement des factures
             $numFacture = date('y')."-".str_pad($latestOrder+1, 5, "0", STR_PAD_LEFT);
 
+                if( $request->p_cmd === 1 ){
+                    $status = 2;
+                }else{
+                    $status = ( $request->p_mnt_partiel == 0 )? 1 : 0;
+                }
+
                 $insertFacture  = Facture::create([
                 "r_num"         =>  $numFacture,
                 "r_client"      =>  $insert->r_i,
                 "r_mnt"         =>  $request->p_mnt,
-                "r_status"      =>  ( $request->p_mnt_partiel == 0 )? 1 : 0
+                "r_status"      =>  $status,
+                "r_cmd"         =>  $request->p_cmd,
                 ]);
 
                 if( $insertFacture->r_i ){
@@ -139,12 +147,23 @@ class FactureController extends Controller
 
                     }
                     
-                    $data = [
+                    switch($request->p_cmd){
+                        case 0:
+                            $data = [
+                                "status" => 1,
+                                "result" => "La vente numéro à [ " . $numFacture . " ] bien été enregistrée"
+                            ];
+                            break;
 
-                        "status" => 1,
-                        "result" => "La facture numéro à [ " . $numFacture . " ] bien été enregistrée"
-
-                    ];
+                        case 1:
+                            $data = [
+                                "status" => 1,
+                                "result" => "La commande numéro à [ " . $numFacture . " ] bien été enregistrée"
+                            ];
+                            break;
+                    }
+                    
+                    
 
                     return response()->json($data, 200);
 

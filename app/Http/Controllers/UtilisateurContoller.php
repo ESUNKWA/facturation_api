@@ -19,7 +19,7 @@ class UtilisateurContoller extends Controller
     public function index()
     {
         //Liste des utilisateurs
-        $utilisateurs = Utilisateur::all();
+        $utilisateurs = Utilisateur::orderBy('r_nom','ASC')->get();
         $data = [
             'status'=>1,
             'result'=> $utilisateurs
@@ -85,7 +85,7 @@ class UtilisateurContoller extends Controller
                         'r_description' => $request->p_description,
                         'r_img'         => $request->p_img,
                         'r_login'       => $request->p_login,
-                        'r_profil'       => 1
+                        'r_profil'       => $request->p_profil
                         ]
                     );
 
@@ -152,9 +152,24 @@ class UtilisateurContoller extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $update = Utilisateur::find($request->r_i);
+        $update->update([
+            'r_nom'         => $request->r_nom,
+            'r_prenoms'     => $request->r_prenoms,
+            'r_email'       => $request->r_email,
+            'r_phone'       => '+225'.$request->r_phone,
+            'r_description' => $request->r_description,
+            'r_img'         => $request->r_img,
+            'r_login'       => $request->r_login,
+            'r_profil'       => $request->r_profil
+            ]);
+        $data = [
+            "status" => 1,
+            "result" => "Modification effectuée avec succès",
+        ];
+        return response()->json($data, 200);
     }
 
     /**

@@ -16,12 +16,13 @@ class Dashbord extends Controller
     public function index($date)
     {
         //Tableau de bord
-        $dashData = DB::select("SELECT CONVERT(SUM(fac.r_mnt),integer) as facturejr,
-        (SELECT CONVERT(SUM(r_montant),integer) FROM t_reglement_partiele WHERE LEFT(created_at,10) = ? ) as rglejr,
+        $dashData = DB::select("SELECT CONVERT(SUM(fac.r_mnt),integer) as ventejr,
+        (SELECT CONVERT(SUM(r_montant),integer) FROM t_reglement_partiele WHERE LEFT(created_at,10) = ? ) as rglepartieljr,
+        (SELECT CONVERT(SUM(r_mnt),integer) FROM t_factures WHERE LEFT(created_at,10) = ? and r_status = 2 and r_cmd = 1 ) as totalCmdJr,
         ( SELECT COUNT(r_i) FROM t_clients WHERE LEFT(created_at,10) = ? ) as nbreClientJour,
-        ( SELECT COUNT(r_i) FROM t_factures WHERE LEFT(created_at,10) = ? ) as nbreFactureJr,
+        ( SELECT COUNT(r_i) FROM t_factures WHERE LEFT(created_at,10) = ? and r_status = 1) as nbreVenteJr,
         ( SELECT JSON_OBJECT('nbreFactureNonSolderJr',COUNT(r_i), 'mntTotal',SUM(r_mnt)) FROM t_factures WHERE LEFT(created_at,10) = ? and r_status = 0 ) as FactureNonSolderJr
-        FROM t_factures fac  where LEFT(created_at,10) = ? and fac.r_status = 1;", [$date, $date,$date, $date, $date]);
+        FROM t_factures fac  where LEFT(created_at,10) = ? and fac.r_status = 1;", [$date, $date,$date, $date, $date, $date]);
 
         $data = [
 

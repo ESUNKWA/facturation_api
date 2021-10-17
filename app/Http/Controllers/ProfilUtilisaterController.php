@@ -109,9 +109,18 @@ class ProfilUtilisaterController extends Controller
      * @param  \App\Models\rc  $rc
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, rc $rc)
+    public function update(Request $request)
     {
-        //
+        $update = Profil::find($request->r_i);
+        $update->update([
+            'r_libelle' =>$request->r_libelle,
+            'r_description' =>$request->r_description,
+        ]);
+        $data = [
+            "status" => 1,
+            "result" => "Modification effectuée avec succès",
+        ];
+        return response()->json($data, 200);
     }
 
     /**
