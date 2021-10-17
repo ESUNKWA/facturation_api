@@ -116,9 +116,49 @@ class PartenairesController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, cr $cr)
+    public function update(Request $request, $idpartenaire)
     {
-        //
+        $update = Partenaires::find($idpartenaire);
+
+        //Récupération des données provenant du serveur
+        $inputs = $request->all();
+
+        //Controlle des champs
+        $errors = [
+            'r_nom'=>'required'
+        ];
+        $erreurs = [
+            'r_nom.required'=>'Le nom du partenaire est réquis',
+        ];
+
+        $validator = Validator::make($inputs, $errors, $erreurs);
+
+        if( $validator->fails() ){
+            return $validator->errors();
+        }else{
+
+            $update->update([
+                'r_nom'             => $request->r_nom,
+                'r_ville'           => $request->r_ville,
+                'r_quartier'        => $request->r_quartier,
+                'r_situation_geo'   => $request->r_stua_geo
+            ]);
+    
+            if( isset($update->r_i) ){
+                $data = [
+                    "status" => 1,
+                    "result" => "Modification effectuée avec succès"
+                ];
+            }else{
+                $data = [
+                    "status" => 0,
+                    "result" => "Une erreur est survenue lors de a modification"
+                ];
+            }
+            return response()->json($data,200);
+
+        }
+
     }
 
     /**
