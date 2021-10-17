@@ -48,11 +48,9 @@ class PartenairesController extends Controller
         //Controlle des champs
 
         $errors = [
-            'p_code'=>'required',
             'p_nom'=>'required'
         ];
         $erreurs = [
-            'p_code.required'=>'Le code est réquis',
             'p_nom.required'=>'Le nom du partenaire est réquis',
         ];
 
@@ -62,13 +60,17 @@ class PartenairesController extends Controller
             return $validator->errors();
         }else{
 
+            $latestOrder = Partenaires::orderBy('r_i')->count(); // Avoir le nombre d'enregistrement des factures
+            $code = "part"."-".str_pad($latestOrder+1, "0", STR_PAD_LEFT);
+
             $partenaires = Partenaires::create([
-                'r_code'            => $request->p_code,
+                'r_code'            => $code,
                 'r_nom'             => $request->p_nom,
                 'r_ville'           => $request->p_ville,
                 'r_quartier'        => $request->p_quartier,
                 'r_situation_geo'   => $request->p_stua_geo,
-                'r_status'          => 0
+                'r_status'          => 0,
+                'r_description'     => $request->p_description,
             ]);
     
             if( isset($partenaires->r_i) ){
@@ -141,7 +143,8 @@ class PartenairesController extends Controller
                 'r_nom'             => $request->r_nom,
                 'r_ville'           => $request->r_ville,
                 'r_quartier'        => $request->r_quartier,
-                'r_situation_geo'   => $request->r_stua_geo
+                'r_situation_geo'   => $request->r_stua_geo,
+                'r_description'     => $request->r_description,
             ]);
     
             if( isset($update->r_i) ){

@@ -85,7 +85,8 @@ class UtilisateurContoller extends Controller
                         'r_description' => $request->p_description,
                         'r_img'         => $request->p_img,
                         'r_login'       => $request->p_login,
-                        'r_profil'       => $request->p_profil
+                        'r_profil'       => $request->p_profil,
+                        'r_partenaire'       => $request->p_partenaire,
                         ]
                     );
 
@@ -163,7 +164,8 @@ class UtilisateurContoller extends Controller
             'r_description' => $request->r_description,
             'r_img'         => $request->r_img,
             'r_login'       => $request->r_login,
-            'r_profil'       => $request->r_profil
+            'r_profil'       => $request->r_profil,
+            'r_partenaire'       => $request->r_partenaire,
             ]);
         $data = [
             "status" => 1,
@@ -196,24 +198,28 @@ class UtilisateurContoller extends Controller
 
 
         if( $validate->fails() ){
-            return response()->json(['status'=>200, 'result'=> $validate->errors()], 200);
+            return response()->json(['status'=>201, 'result'=> $validate->errors()], 200);
         }
 
         $login = Utilisateur::where('r_login', $request->p_login)->get();
-
+       
         try {
             if( count($login) !== 0 ){
-                
-               $acces = T_acces::where('r_utilisateur', $login[0]->r_i)->get();
 
-                if( $acces[0]->r_mdp === $request->p_mdp ){
+                if( $login[0]->r_status === 1 ){
+                    $acces = T_acces::where('r_utilisateur', $login[0]->r_i)->get();
 
-                    return response()->json(['status'=>1, 'result'=>$login]);
+                    if( $acces[0]->r_mdp === $request->p_mdp ){
 
+                        return response()->json(['status'=>1, 'result'=>$login]);
+
+                    }else{
+                        return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte !']);
+                    }
                 }else{
-                    return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte !']);
+                    return response()->json(['status'=>-100, 'result'=>'Votre compte est inactif, veuillez contacter l\'éditeur']);
                 }
-
+         
             }else{
                 return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte']);
             }
