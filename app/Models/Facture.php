@@ -10,5 +10,5 @@ class Facture extends Model
     use HasFactory;
     protected $table = 't_factures';
     protected $primaryKey = 'r_i';
-    protected $fillable = ['r_num', 'r_client', 'r_mnt','r_status','r_cmd'];
+    protected $fillable = ['r_num', 'r_client', 'r_mnt','r_status','r_iscmd','r_partenaire'];
 }

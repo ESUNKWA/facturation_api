@@ -18,13 +18,15 @@ class FactureController extends Controller
      * @return \Illuminate\Http\Response
      */
     //Ventes du jours
-    public function index($iscmd)
+    public function index($iscmd,$idpartenaire, $jour)
     {
         //Liste des factures
         $factures = DB::table('t_clients')
             ->join('t_factures', 't_clients.r_i', '=', 't_factures.r_client')
             ->select('t_clients.*', 't_factures.*')
-            ->where('t_factures.r_cmd','=',$iscmd)
+            ->where('t_factures.r_iscmd','=',$iscmd)
+            ->where('t_factures.r_partenaire','=',$idpartenaire)
+            ->whereDate('t_factures.created_at', $jour)
             ->orderBy('t_factures.created_at', 'DESC')
             ->get();
         //$factures = Facture::orderBy('created_at', 'DESC')->get();
@@ -82,6 +84,7 @@ class FactureController extends Controller
             "r_phone"           => $request->p_phone,
             "r_email"           => $request->p_email,
             "r_description"     => $request->p_description,
+            "r_partenaire"  =>  $request->p_partenaire
 
         ]);
 
@@ -102,13 +105,14 @@ class FactureController extends Controller
                 "r_client"      =>  $insert->r_i,
                 "r_mnt"         =>  $request->p_mnt,
                 "r_status"      =>  $status,
-                "r_cmd"         =>  $request->p_cmd,
+                "r_iscmd"       =>  $request->p_cmd,
+                "r_partenaire"  =>  $request->p_partenaire
                 ]);
 
                 if( $insertFacture->r_i ){
 
                     if( $request->p_mnt_partiel !== 0 ){
-                        $this->reglement_partiel($insertFacture->r_i, $request->p_mnt_partiel, false);
+                        $this->reglement_partiel($insertFacture->r_i, $request->p_mnt_partiel, false,$request->p_partenaire);
                     }
 
                     //Saisie détails facture
@@ -121,7 +125,8 @@ class FactureController extends Controller
                             "r_produit"	    =>  $produit['p_idproduit'],
                             "r_quantite"    =>  $produit['p_quantite'],
                             "r_total"       =>  $produit['p_total'],
-                            "r_description" =>  "ras"
+                            "r_description" =>  "ras",
+                            "r_partenaire"  =>  $request->p_partenaire
                         ]);
 
 
@@ -178,11 +183,12 @@ class FactureController extends Controller
     }
 
     //Enregistrement reglement partiel
-    public function reglement_partiel($idfacture, $mnt_partiel,$solder){
+    public function reglement_partiel($idfacture, $mnt_partiel,$solder,$idpartenaire){
         
          $reglmtPartiel = ReglementPartiel::create([
             "r_facture" =>$idfacture,
-            "r_montant" => $mnt_partiel
+            "r_montant" => $mnt_partiel,
+            "r_partenaire"  =>  $idpartenaire
         ]);
 
         if($solder == 1){

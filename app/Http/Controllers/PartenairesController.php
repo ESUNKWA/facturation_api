@@ -95,9 +95,14 @@ class PartenairesController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function show(cr $cr)
+    public function show($idpartenaire)
     {
-        //
+        $partenaires = Partenaires::orderBy('r_nom','ASC')->where('r_partenaire',$idpartenaire)->get();
+        $data = [
+            "status" => 1,
+            "result" => $partenaires
+        ];
+        return response()->json($data,200);
     }
 
     /**

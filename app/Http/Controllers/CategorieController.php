@@ -104,9 +104,14 @@ class CategorieController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function show(cr $cr)
+    public function show(cr $id)
     {
-        //
+        $produits = Categorie::orderBy('r_libelle', 'ASC')->get();
+        if( $produits ){
+            return response()->json(["status"=>1, "result" => $produits], 200);
+        }else{
+            return response()->json(["status"=>0, "result" => $this->afficheError], 200);
+        }
     }
 
     /**

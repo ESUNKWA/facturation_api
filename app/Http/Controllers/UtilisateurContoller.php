@@ -132,7 +132,15 @@ class UtilisateurContoller extends Controller
      */
     public function show($id)
     {
-        //
+        //Liste des utilisateurs
+        //$utilisateurs = Utilisateur::orderBy('r_nom','ASC')->where('r_partenaire',$id)->get();
+        $utilisateurs = DB::select("SELECT * FROM utilisateurs 
+        WHERE r_partenaire = COALESCE(?,r_partenaire)", [$id]);
+        $data = [
+            'status'=>1,
+            'result'=> $utilisateurs
+        ];
+        return response()->json($data, 200);
     }
 
     /**
@@ -183,6 +191,32 @@ class UtilisateurContoller extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function activDesact($status, $iduser){
+        $update = Utilisateur::find($iduser);
+        $update->update([
+            'r_status' => $status
+        ]);
+        switch($update->r_status){
+            case 0:
+                $data = [
+                    "status" => 1,
+                    "result" => "Le compte est désactivé",
+                ];
+                break;
+
+            case 1:
+                $data = [
+                    "status" => 1,
+                    "result" => "Le compte est activé",
+                ];
+                break;
+            default;
+            return;
+        }
+        
+        return response()->json($data, 200);
     }
 
     public function login(Request $request){

@@ -45,11 +45,10 @@ class ProduitController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    //Saisie des produits
     public function store(Request $request)
     {
-        //Saisie des produits
-
-        //Validation des champs
+         //Validation des champs
         $inputs = $request->all();
 
         $errors = [
@@ -70,6 +69,7 @@ class ProduitController extends Controller
         }else{
 
             $insert = Produit::create([
+                "r_partenaire"  => $request->p_partenaire,
                 "r_categorie"   => $request->p_categorie,
                 "r_libelle"     => $request->r_libelle,
                 "r_stock"       => $request->p_stock,
@@ -109,9 +109,17 @@ class ProduitController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function show(cr $cr)
+    public function show($idpartenaire)
     {
-        //
+        //Liste des produits
+        $produits = Produit::orderBy('r_libelle', 'ASC')->where('r_partenaire',$idpartenaire)->get();
+
+        $res = [
+            "status" => 1,
+            "result" => $produits
+        ];
+
+        return response()->json($res, 200);
     }
 
     /**
