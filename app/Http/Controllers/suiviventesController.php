@@ -18,8 +18,14 @@ class suiviventesController extends Controller
 
         if( $details_ventes ){
             $data = [
-                "status"=>0,
+                "status"=>1,
                 "result"=>$details_ventes
+            ];
+            return response()->json($data,200);
+        }else{
+            $data = [
+                "status"=>0,
+                "result"=>"Aucune données pour cette période"
             ];
             return response()->json($data,200);
         }
