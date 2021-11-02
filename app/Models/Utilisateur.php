@@ -5,11 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Utilisateur extends Model
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class Utilisateur extends Model implements JWTSubject
 {
     use HasFactory;
 
     protected $table = 'utilisateurs';
     protected $primaryKey = 'r_i';
     protected $fillable = ["r_nom","r_prenoms","r_email","r_phone","r_description","r_img","r_login","r_profil",'r_partenaire','r_status'];
+
+
+    public function getJWTIdentifier() {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims() {
+        return [];
+    } 
 }

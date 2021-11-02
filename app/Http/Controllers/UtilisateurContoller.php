@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Facades\Auth;
+
 class UtilisateurContoller extends Controller
 {
     /**
@@ -244,8 +246,15 @@ class UtilisateurContoller extends Controller
                     $acces = T_acces::where('r_utilisateur', $login[0]->r_i)->get();
 
                     if( $acces[0]->r_mdp === $request->p_mdp ){
+        
+                        /* if (! $token = auth()->attempt($validator->validated())) {
+                            return response()->json(['error' => 'Unauthorized'], 401);
+                        }
+                        
+                         return $this->createNewToken(22); */
 
                         return response()->json(['status'=>1, 'result'=>$login]);
+
 
                     }else{
                         return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte !']);
@@ -262,5 +271,24 @@ class UtilisateurContoller extends Controller
         }
 
 
+    }
+
+    public function refresh() {
+        return $this->createNewToken(auth()->refresh());
+    }
+    
+
+    public function userProfile() {
+        return response()->json(auth()->user());
+    }
+
+    protected function createNewToken($token){
+      
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'user' => auth()->user()
+        ]);
     }
 }
