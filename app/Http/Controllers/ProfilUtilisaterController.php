@@ -29,7 +29,7 @@ class ProfilUtilisaterController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -77,7 +77,7 @@ class ProfilUtilisaterController extends Controller
             }
         }
 
-    
+
     }
 
     /**
@@ -109,17 +109,33 @@ class ProfilUtilisaterController extends Controller
      * @param  \App\Models\rc  $rc
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $ip_profil)
     {
-        $update = Profil::find($request->r_i);
-        $update->update([
-            'r_libelle' =>$request->r_libelle,
-            'r_description' =>$request->r_description,
-        ]);
-        $data = [
-            "status" => 1,
-            "result" => "Modification effectuée avec succès",
-        ];
+        $update = Profil::find($ip_profil);
+
+        if( $update ){
+
+            $update->update([
+                'r_libelle' =>$request->r_libelle,
+                'r_description' =>$request->r_description,
+            ]);
+
+            $data = [
+                "status" => 1,
+                "result" => "Modification effectuée avec succès",
+            ];
+
+
+        }else{
+
+            $data = [
+                "status" => 0,
+                "result" => "Echec de la modification",
+            ];
+
+        }
+
+
         return response()->json($data, 200);
     }
 

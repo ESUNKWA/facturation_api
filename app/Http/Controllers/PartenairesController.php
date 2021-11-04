@@ -71,8 +71,9 @@ class PartenairesController extends Controller
                 'r_situation_geo'   => $request->p_stua_geo,
                 'r_status'          => 0,
                 'r_description'     => $request->p_description,
+                'r_utilisateur'     => $request->p_utilisateur,
             ]);
-    
+
             if( isset($partenaires->r_i) ){
                 $data = [
                     "status" => 1,
@@ -151,7 +152,7 @@ class PartenairesController extends Controller
                 'r_situation_geo'   => $request->r_stua_geo,
                 'r_description'     => $request->r_description,
             ]);
-    
+
             if( isset($update->r_i) ){
                 $data = [
                     "status" => 1,

@@ -11,9 +11,9 @@ class Utilisateur extends Model implements JWTSubject
 {
     use HasFactory;
 
-    protected $table = 'utilisateurs';
+    protected $table = 't_utilisateurs';
     protected $primaryKey = 'r_i';
-    protected $fillable = ["r_nom","r_prenoms","r_email","r_phone","r_description","r_img","r_login","r_profil",'r_partenaire','r_status'];
+    protected $fillable = ["r_nom","r_prenoms","r_email","r_phone","r_description","r_img","r_login","r_mdp","r_profil",'r_partenaire','r_status'];
 
 
     public function getJWTIdentifier() {
@@ -22,5 +22,5 @@ class Utilisateur extends Model implements JWTSubject
 
     public function getJWTCustomClaims() {
         return [];
-    } 
+    }
 }

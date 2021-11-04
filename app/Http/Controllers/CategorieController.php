@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class CategorieController extends Controller
 {
-    
+
     private $afficheError = "Une erreur est survenue !";
 
     /**
@@ -18,6 +18,7 @@ class CategorieController extends Controller
      */
     public function index()
     {
+
         //Liste des catégories de produits
         $produits = Categorie::orderBy('r_libelle', 'ASC')->get();
         if( $produits ){
@@ -25,7 +26,7 @@ class CategorieController extends Controller
         }else{
             return response()->json(["status"=>0, "result" => $this->afficheError], 200);
         }
-       
+
     }
 
     /**
@@ -51,7 +52,7 @@ class CategorieController extends Controller
         $inputs = $request->all();
 
         $errors = [
-            "r_libelle" => "required|unique:t_categorie"
+            "r_libelle" => "required|unique:t_categories"
         ];
 
         $erreurs = [
@@ -73,29 +74,29 @@ class CategorieController extends Controller
                 "r_libelle" => $request->r_libelle,
                 "r_description" => $request->p_description,
                 "r_status" => 1
-    
+
             ]);
-    
+
             if( $insert ){
-    
+
                 $responseData = [
                     "status" => 1,
                     "result" => "Enregistrement éffectué avec succes !",
                 ];
-    
+
                 return response()->json($responseData, 200);
             }else{
                 $responseData = [
                     "status" => 0,
                     "result" => $this->afficheError,
                 ];
-    
+
                 return response()->json($responseData, 200);
             }
 
         }
 
-       
+
     }
 
     /**

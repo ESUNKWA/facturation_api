@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use App\Http\Controllers\Dashbord;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\authController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\ProduitController;
@@ -26,9 +27,9 @@ Route::post('utilisateur/login', [UtilisateurContoller::class,'login']);
 Route::resource('utilisateurs', UtilisateurContoller::class);
 
 //Proifls des utilisateurs
-Route::get('profil/list', [ProfilUtilisaterController::class,'index']);
-Route::post('profil/store', [ProfilUtilisaterController::class,'store']);
-Route::put('profil/update', [ProfilUtilisaterController::class,'update']);
+// Route::get('profil/list', [ProfilUtilisaterController::class,'index']);
+// Route::post('profil/store', [ProfilUtilisaterController::class,'store']);
+// Route::put('profil/update', [ProfilUtilisaterController::class,'update']);
 //Route::resource('profilsutilisateurs', ProfilUtilisaterController::class);
 
 Route::resource('profil', ProfilUtilisaterController::class);
@@ -59,14 +60,18 @@ Route::get('facture/detail/{id}', [FactureController::class,'show']);
 Route::get('facture/liste_facture_client/{id}', [FactureController::class,'liste_facture_client']);
 Route::post('facture/reglement_partiel/{id}/{mnt}/{solder}/{partenaire}', [FactureController::class,'reglement_partiel']);
 Route::put('facture/update_status_facture/{status}', [FactureController::class,'update_status_facture']);
- 
+
 
 //Dashbord
 Route::get('dashbord/{date}/{partenaire}', [Dashbord::class,'index']);
 //Route::get('topsventes/{partenaire}', [Dashbord::class,'produitsPlusVendus']);
 
 //Partenaires
-Route::resource('partenaire', PartenairesController::class);
+Route::resource('partenaires', PartenairesController::class);
 
 //Suivie des ventes et des commandes
 Route::get('detailsvente/{idpartenaire}/{date1}/{date2}/{iscmd}', [suiviventesController::class,'suivi_vente']);
+
+//Authentification
+
+Route::resource('auth', authController::class);

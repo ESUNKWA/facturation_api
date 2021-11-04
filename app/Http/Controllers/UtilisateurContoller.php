@@ -49,7 +49,7 @@ class UtilisateurContoller extends Controller
      //Ajout des utilisateur
     public function store(Request $request)
     {
-        
+
         $inputs = $request->all();//Récupère tous champs du formulaire
 
         $errors = [
@@ -88,6 +88,7 @@ class UtilisateurContoller extends Controller
                         'r_img'         => $request->p_img,
                         'r_login'       => $request->p_login,
                         'r_profil'       => $request->p_profil,
+                        'r_mdp'         => $request->password,
                         'r_partenaire'       => $request->p_partenaire,
                         ]
                     );
@@ -99,27 +100,7 @@ class UtilisateurContoller extends Controller
                 'msg'=>'Utilisateur crée avec succès'
             ];
 
-            if( $insertion->r_i ){
-
-
-                $insertAcces = T_acces::create([
-                    'r_utilisateur' => $insertion->r_i,
-                    'r_mdp'         => $request->password,
-                    'r_status'      => 1
-                ]);
-
-                if( $insertAcces ){
-                    return response()->json($data, 200);
-                }
-
-
-
-            }else{
-               // DB::rollBack();
-            }
-
-
-            //DB::commit();
+            return response()->json($data, 200);
 
         }
 
@@ -136,7 +117,7 @@ class UtilisateurContoller extends Controller
     {
         //Liste des utilisateurs
         //$utilisateurs = Utilisateur::orderBy('r_nom','ASC')->where('r_partenaire',$id)->get();
-        $utilisateurs = DB::select("SELECT * FROM utilisateurs 
+        $utilisateurs = DB::select("SELECT * FROM t_utilisateurs
         WHERE r_partenaire = COALESCE(?,r_partenaire)", [$id]);
         $data = [
             'status'=>1,
@@ -203,7 +184,7 @@ class UtilisateurContoller extends Controller
         switch($update->r_status){
             case 0:
                 $data = [
-                    "status" => 1,
+                    "status" => 0,
                     "result" => "Le compte est désactivé",
                 ];
                 break;
@@ -217,73 +198,22 @@ class UtilisateurContoller extends Controller
             default;
             return;
         }
-        
+
         return response()->json($data, 200);
     }
 
-    public function login(Request $request){
-
-        // Validation des données
-
-         $errors = [
-            'p_login' => 'required',
-            'p_mdp' => 'required',
-        ];
-
-        $validate = Validator::make($request->all(), $errors);
-
-
-        if( $validate->fails() ){
-            return response()->json(['status'=>201, 'result'=> $validate->errors()], 200);
-        }
-
-        $login = Utilisateur::where('r_login', $request->p_login)->get();
-       
-        try {
-            if( count($login) !== 0 ){
-
-                if( $login[0]->r_status === 1 ){
-                    $acces = T_acces::where('r_utilisateur', $login[0]->r_i)->get();
-
-                    if( $acces[0]->r_mdp === $request->p_mdp ){
-        
-                        /* if (! $token = auth()->attempt($validator->validated())) {
-                            return response()->json(['error' => 'Unauthorized'], 401);
-                        }
-                        
-                         return $this->createNewToken(22); */
-
-                        return response()->json(['status'=>1, 'result'=>$login]);
-
-
-                    }else{
-                        return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte !']);
-                    }
-                }else{
-                    return response()->json(['status'=>-100, 'result'=>'Votre compte est inactif, veuillez contacter l\'éditeur']);
-                }
-         
-            }else{
-                return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte']);
-            }
-        } catch (\Throwable $th) {
-           //return response()->json(['status'=>1, 'result'=>$login]);
-        }
-
-
-    }
 
     public function refresh() {
         return $this->createNewToken(auth()->refresh());
     }
-    
+
 
     public function userProfile() {
         return response()->json(auth()->user());
     }
 
     protected function createNewToken($token){
-      
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
