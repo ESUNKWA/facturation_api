@@ -22,7 +22,7 @@ Route::post('utilisateur/register', [UtilisateurContoller::class,'store']);
 
 Route::put('utilisateur/update', [UtilisateurContoller::class,'update']);
  */
-Route::put('utilisateur/activDesact/{status}/{id}', [UtilisateurContoller::class,'activDesact']);
+Route::put('utilisateur.activdesact', [UtilisateurContoller::class,'activDesact']);
 Route::post('utilisateur/login', [UtilisateurContoller::class,'login']);
 Route::resource('utilisateurs', UtilisateurContoller::class);
 
@@ -46,6 +46,7 @@ Route::post('produit/register', [ProduitController::class,'store']);
  */
 Route::put('produit/ajout_stock', [ProduitController::class,'ajout_stock']);
 Route::put('produit/edit', [ProduitController::class,'edit']);
+// Route::get('produits/{idpartenaire}', [ProduitController::class, 'show']);
 Route::resource('produits', ProduitController::class);
 
 //Clients
@@ -67,6 +68,7 @@ Route::get('dashbord/{date}/{partenaire}', [Dashbord::class,'index']);
 //Route::get('topsventes/{partenaire}', [Dashbord::class,'produitsPlusVendus']);
 
 //Partenaires
+Route::put('partenaires.activdesact', [PartenairesController::class,'activDesact']);
 Route::resource('partenaires', PartenairesController::class);
 
 //Suivie des ventes et des commandes

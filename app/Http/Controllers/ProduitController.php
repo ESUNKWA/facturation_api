@@ -53,13 +53,13 @@ class ProduitController extends Controller
 
         $errors = [
             "p_categorie" => "required",
-            "r_libelle" => "required|unique:t_produit"
+            //"r_libelle" => "required|unique:t_produits"
         ];
 
         $erreurs = [
             "p_categorie.required" => "La catégorie du produit est réquis",
             "r_libelle.required" => "Le libellé du est réquis",
-            "r_libelle.unique" => "Produit déjà existant"
+            //"r_libelle.unique" => "Produit déjà existant"
         ];
 
         $validate = Validator::make($inputs, $errors, $erreurs);

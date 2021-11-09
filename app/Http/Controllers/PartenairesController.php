@@ -180,4 +180,31 @@ class PartenairesController extends Controller
     {
         //
     }
+
+    public function activDesact(Request $request){
+        $update = Partenaires::find($request->p_idpartenaire);
+        $update->update([
+            'r_status' => $request->p_status
+        ]);
+        switch($update->r_status){
+            case 0:
+                $data = [
+                    "status" => 0,
+                    "result" => "Le compte est désactivé",
+                ];
+                break;
+
+            case 1:
+                $data = [
+                    "status" => 1,
+                    "result" => "Le compte est activé",
+                ];
+                break;
+            default;
+            return;
+        }
+
+        return response()->json($data, 200);
+    }
+
 }

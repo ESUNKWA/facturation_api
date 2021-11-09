@@ -117,8 +117,9 @@ class UtilisateurContoller extends Controller
     {
         //Liste des utilisateurs
         //$utilisateurs = Utilisateur::orderBy('r_nom','ASC')->where('r_partenaire',$id)->get();
-        $utilisateurs = DB::select("SELECT * FROM t_utilisateurs
-        WHERE r_partenaire = COALESCE(?,r_partenaire)", [$id]);
+        $utilisateurs = DB::select("SELECT ut.*, part.r_nom as nom_part FROM t_utilisateurs ut
+        INNER JOIN t_partenaires part ON part.r_i = ut.r_partenaire 
+        WHERE ut.r_partenaire = COALESCE(?,ut.r_partenaire)", [$id]);
         $data = [
             'status'=>1,
             'result'=> $utilisateurs
@@ -176,23 +177,23 @@ class UtilisateurContoller extends Controller
         //
     }
 
-    public function activDesact($status, $iduser){
-        $update = Utilisateur::find($iduser);
+    public function activDesact(Request $request){
+        $update = Utilisateur::find($request->iduser);
         $update->update([
-            'r_status' => $status
+            'r_status' => $request->p_status
         ]);
         switch($update->r_status){
             case 0:
                 $data = [
                     "status" => 0,
-                    "result" => "Le compte est désactivé",
+                    "result" => "Le compte de l'utilisateur est désactivé",
                 ];
                 break;
 
             case 1:
                 $data = [
                     "status" => 1,
-                    "result" => "Le compte est activé",
+                    "result" => "Le compte de l'utilisateur est activé",
                 ];
                 break;
             default;

@@ -22,12 +22,12 @@ class FactureController extends Controller
     {
         //Liste des factures
         $factures = DB::table('t_clients')
-            ->join('t_factures', 't_clients.r_i', '=', 't_factures.r_client')
-            ->select('t_clients.*', 't_factures.*')
-            ->where('t_factures.r_iscmd','=',$iscmd)
-            ->where('t_factures.r_partenaire','=',$idpartenaire)
-            ->whereDate('t_factures.created_at', $jour)
-            ->orderBy('t_factures.created_at', 'DESC')
+            ->join('t_ventes', 't_clients.r_i', '=', 't_ventes.r_client')
+            ->select('t_clients.*', 't_ventes.*')
+            ->where('t_ventes.r_iscmd','=',$iscmd)
+            ->where('t_ventes.r_partenaire','=',$idpartenaire)
+            ->whereDate('t_ventes.created_at', $jour)
+            ->orderBy('t_ventes.created_at', 'DESC')
             ->get();
         //$factures = Facture::orderBy('created_at', 'DESC')->get();
         $response = [
@@ -51,10 +51,10 @@ class FactureController extends Controller
     public function liste_facture_client($idClient)
     {
         //Liste des factures
-        $factures = DB::table('t_factures')
-            ->join('t_clients', 't_clients.r_i', '=', 't_factures.r_client')
-            ->orderBy('t_factures.created_at', 'DESC')
-            ->where('t_factures.r_client', '=', $idClient)
+        $factures = DB::table('t_ventes')
+            ->join('t_clients', 't_clients.r_i', '=', 't_ventes.r_client')
+            ->orderBy('t_ventes.created_at', 'DESC')
+            ->where('t_ventes.r_client', '=', $idClient)
             ->get();
         //$factures = Facture::orderBy('created_at', 'DESC')->get();
         $response = [
@@ -121,8 +121,8 @@ class FactureController extends Controller
                         $produit = $request->p_ligneFacture[$i];
 
                         $insertlgnFacture   = DetailsFactures::create([
-                            "r_facture"     =>  $insertFacture->r_i,
-                            "r_produit"	    =>  $produit['p_idproduit'],
+                            "r_vente"     =>  $insertFacture->r_i,
+                            "r_produit"	    =>  $produit['r_i'],
                             "r_quantite"    =>  $produit['p_quantite'],
                             "r_total"       =>  $produit['p_total'],
                             "r_description" =>  "ras",
@@ -134,7 +134,7 @@ class FactureController extends Controller
 
                         if( $insertlgnFacture->r_i ){
 
-                            $updateProduit = Produit::find($produit['p_idproduit']);
+                            $updateProduit = Produit::find($produit['r_i']);
 
                             $updateProduit->r_stock = $produit['p_stock_restant'];
 
@@ -186,7 +186,7 @@ class FactureController extends Controller
     public function reglement_partiel($idfacture, $mnt_partiel,$solder,$idpartenaire){
         
          $reglmtPartiel = ReglementPartiel::create([
-            "r_facture" =>$idfacture,
+            "r_vente" =>$idfacture,
             "r_montant" => $mnt_partiel,
             "r_partenaire"  =>  $idpartenaire
         ]);
@@ -228,8 +228,8 @@ class FactureController extends Controller
         //Détails de la facture
         $details_facture = DB::select('SELECT 
             fac.r_num, fac.r_client, fac.r_mnt, fac.r_status,
-            ( SELECT SUM(rgl.r_montant) FROM t_reglement_partiele rgl WHERE rgl.r_facture = fac.r_i ) as mnt_paye,
-            det.*, prd.r_libelle as libelle_produit FROM t_factures fac INNER JOIN t_details_factures det ON fac.r_i = det.r_facture INNER JOIN t_produit prd ON prd.r_i = det.r_produit
+            ( SELECT SUM(rgl.r_montant) FROM t_reglement_partiele rgl WHERE rgl.r_vente = fac.r_i ) as mnt_paye,
+            det.*, prd.r_libelle as libelle_produit FROM t_ventes fac INNER JOIN t_details_ventes det ON fac.r_i = det.r_vente INNER JOIN t_produits prd ON prd.r_i = det.r_produit
         WHERE fac.r_i = ?', [$id]);
 
             $data = [

@@ -47,6 +47,7 @@ class authController extends Controller
             'p_mdp.required' => 'Veuillez saisir votre mot de passe',
         ];
 
+      
         $validate = Validator::make($request->all(), $errors, $erreurs);
 
 
