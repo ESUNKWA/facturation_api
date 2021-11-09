@@ -74,7 +74,7 @@ class FactureController extends Controller
     public function store(Request $request)
     {
         //DB::beginTransaction();
-     
+
         //Saisie un client
         $insert = Client::create([
 
@@ -116,8 +116,8 @@ class FactureController extends Controller
                     }
 
                     //Saisie détails facture
-                    for ($i=0; $i < count($request->p_ligneFacture); $i++){ 
-                        
+                    for ($i=0; $i < count($request->p_ligneFacture); $i++){
+
                         $produit = $request->p_ligneFacture[$i];
 
                         $insertlgnFacture   = DetailsFactures::create([
@@ -148,10 +148,10 @@ class FactureController extends Controller
                         }else{
                              DB::rollBack();
                         }
-                        
+
 
                     }
-                    
+
                     switch($request->p_cmd){
                         case 0:
                             $data = [
@@ -167,24 +167,26 @@ class FactureController extends Controller
                             ];
                             break;
                     }
-                    
-                    
+
+
 
                     return response()->json($data, 200);
 
                 }else{
                      DB::rollBack();
                 }
-               
+
         }else{
             DB::rollBack();
         }
-        
+
     }
 
     //Enregistrement reglement partiel
     public function reglement_partiel($idfacture, $mnt_partiel,$solder,$idpartenaire){
-        
+
+
+
          $reglmtPartiel = ReglementPartiel::create([
             "r_vente" =>$idfacture,
             "r_montant" => $mnt_partiel,
@@ -193,7 +195,7 @@ class FactureController extends Controller
 
         if($solder == 1){
              $this->update_status_facture($idfacture);
-            
+
             $data = [
                 "status" => 1,
                 "result" => "La facture a étée soldée !"
@@ -206,7 +208,7 @@ class FactureController extends Controller
             ];
             return response()->json($res, 200);
         }
-         
+
     }
 
     //reglement total de la facture
@@ -226,7 +228,7 @@ class FactureController extends Controller
     public function show($id)
     {
         //Détails de la facture
-        $details_facture = DB::select('SELECT 
+        $details_facture = DB::select('SELECT
             fac.r_num, fac.r_client, fac.r_mnt, fac.r_status,
             ( SELECT SUM(rgl.r_montant) FROM t_reglement_partiele rgl WHERE rgl.r_vente = fac.r_i ) as mnt_paye,
             det.*, prd.r_libelle as libelle_produit FROM t_ventes fac INNER JOIN t_details_ventes det ON fac.r_i = det.r_vente INNER JOIN t_produits prd ON prd.r_i = det.r_produit
