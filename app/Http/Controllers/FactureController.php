@@ -185,8 +185,6 @@ class FactureController extends Controller
     //Enregistrement reglement partiel
     public function reglement_partiel($idfacture, $mnt_partiel,$solder,$idpartenaire){
 
-
-
          $reglmtPartiel = ReglementPartiel::create([
             "r_vente" =>$idfacture,
             "r_montant" => $mnt_partiel,

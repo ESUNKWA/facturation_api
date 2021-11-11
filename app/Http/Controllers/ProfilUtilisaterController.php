@@ -109,9 +109,9 @@ class ProfilUtilisaterController extends Controller
      * @param  \App\Models\rc  $rc
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $ip_profil)
+    public function update(Request $request)
     {
-        $update = Profil::find($ip_profil);
+        $update = Profil::find($request->r_i);
 
         if( $update ){
 

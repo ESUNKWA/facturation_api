@@ -64,7 +64,7 @@ Route::put('facture/update_status_facture/{status}', [FactureController::class,'
 
 
 //Dashbord
-Route::get('dashbord/{date}/{partenaire}', [Dashbord::class,'index']);
+Route::get('dashbord/{partenaire}', [Dashbord::class,'index']);
 //Route::get('topsventes/{partenaire}', [Dashbord::class,'produitsPlusVendus']);
 
 //Partenaires

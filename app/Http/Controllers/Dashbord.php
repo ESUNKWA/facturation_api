@@ -14,23 +14,21 @@ class Dashbord extends Controller
      * @return \Illuminate\Http\Response
      */
     private $res;
-    public function index($date,$idpartenaire)
+    public function index($idpartenaire)
     {
 
-        $dashData = DB::select("SELECT SUM(vt.r_mnt) as ventejr,
-        (SELECT SUM(r_montant) FROM t_reglement_partiele WHERE LEFT(created_at,10) = ? and r_partenaire = ? ) as rglepartieljr,
-        (SELECT SUM(r_mnt) FROM t_ventes WHERE LEFT(created_at,10) = ? and r_status = 2 and r_iscmd = 1 and r_partenaire = ? ) as totalCmdJr,
-        ( SELECT COUNT(r_i) FROM t_clients WHERE LEFT(created_at,10) = ? and r_partenaire = ?) as nbreClientJour,
-        ( SELECT COUNT(r_i) FROM t_ventes WHERE LEFT(created_at,10) = ? and r_status = 1 and r_partenaire = ?) as nbreVenteJr
-        /*( SELECT JSON_OBJECT('nbreFactureNonSolderJr',COUNT(r_i), 'mntTotal',SUM(r_mnt)) FROM t_ventes WHERE LEFT(created_at,10) = ? and r_status != 1 ) as FactureNonSolderJr*/
-
-        FROM t_ventes vt  where LEFT(created_at,10) = ? and vt.r_status = 1 and vt.r_partenaire = ?", [$date,$idpartenaire,$date,$idpartenaire, $date, $idpartenaire, $date,$idpartenaire, $date,$idpartenaire]);
+        $dashData = DB::select("SELECT COALESCE(SUM(vt.r_mnt),0) as ventejr,
+        ( SELECT COALESCE(SUM(rgl.r_montant),0) FROM t_ventes vt INNER JOIN t_reglement_partiele rgl ON vt.r_i = rgl.r_vente WHERE vt.r_status = 0 AND vt.r_iscmd = 0 AND vt.r_partenaire = ? ) as reglPartielJr,
+        ( SELECT COALESCE(SUM(vt.r_mnt),0) FROM t_ventes vt WHERE vt.r_status = 0 AND vt.r_iscmd = 0 AND vt.r_partenaire = ? AND DATE(vt.created_at) = DATE(CURRENT_DATE())) as venteNonSoldees,
+        ( SELECT COALESCE(SUM(vt.r_mnt),0) FROM t_ventes vt WHERE vt.r_status = 2 AND vt.r_partenaire = ? AND vt.r_iscmd = 1 AND DATE(vt.created_at) = DATE(CURRENT_DATE()) ) as totalCmdJr
+        FROM t_ventes vt WHERE vt.r_status = 1 AND vt.r_partenaire = ? AND DATE(vt.created_at) = DATE(CURRENT_DATE())", [$idpartenaire,$idpartenaire,$idpartenaire,$idpartenaire]);
 
         $topsVendu = $this->top_vendus($idpartenaire);
 
+
         $chiffre_aff_mois = $this->chiffre_aff_mois($idpartenaire);
 
-        $this->res = array_merge([$dashData], [$topsVendu], $chiffre_aff_mois);
+       $this->res = array_merge($dashData, $chiffre_aff_mois, [$topsVendu]);
 
         $data = [
 
@@ -78,11 +76,14 @@ class Dashbord extends Controller
 
     public function top_vendus($idpartenaire){
 
-        $topsVendu = DB::select("SELECT prd.r_libelle as 'name',SUM(dt.r_total) as 'value'
-        FROM t_ventes fac INNER join t_details_ventes dt on fac.r_i = dt.r_vente
-        INNER JOIN t_produits prd on prd.r_i = dt.r_produit
-        WHERE MONTH(dt.created_at) = MONTH(CURRENT_DATE()) AND fac.r_partenaire = ? AND fac.r_status = 1
-        GROUP BY prd.r_libelle ORDER BY fac.r_mnt DESC LIMIT 5", [$idpartenaire]);
+        $topsVendu = DB::select("SELECT * FROM
+        (
+        SELECT prd.r_libelle as 'name', dt.r_total as 'value'
+                FROM t_ventes fac INNER join t_details_ventes dt on fac.r_i = dt.r_vente
+                INNER JOIN t_produits prd on prd.r_i = dt.r_produit
+                WHERE MONTH(dt.created_at) = MONTH(CURRENT_DATE())
+                AND fac.r_partenaire = 2 AND fac.r_status = 1 GROUP BY prd.r_libelle
+        ) as momo ORDER BY value DESC LIMIT 5", [$idpartenaire]);
 
         $data = [
 
@@ -96,9 +97,13 @@ class Dashbord extends Controller
 
 
     public function chiffre_aff_mois($idpartenaire){
-        $chiffre_aff_mois = DB::select("SELECT SUM(dt.r_total) as totalMois FROM t_ventes fac
-        INNER join t_details_ventes dt on fac.r_i = dt.r_vente
-        WHERE MONTH(dt.created_at) = MONTH(CURRENT_DATE()) AND fac.r_partenaire = ? AND fac.r_status = 1;", [$idpartenaire]);
+        $chiffre_aff_mois = DB::select("SELECT COALESCE(SUM(vt.r_mnt),0) as venteMois,
+
+        ( SELECT COALESCE(SUM(rgl.r_montant),0) FROM t_ventes vt
+         INNER JOIN t_reglement_partiele rgl ON vt.r_i = rgl.r_vente
+         WHERE vt.r_status = 0 AND vt.r_iscmd = 0 AND vt.r_partenaire = ? ) as reglPartielMois
+
+        FROM t_ventes vt WHERE vt.r_status = 1 AND vt.r_partenaire = ? AND MONTH(vt.created_at) = MONTH(CURRENT_DATE());", [$idpartenaire,$idpartenaire]);
 
         return $chiffre_aff_mois;
     }
