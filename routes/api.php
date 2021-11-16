@@ -38,6 +38,7 @@ Route::resource('categories', CategorieController::class);
 //Produits
 Route::put('produit/ajout_stock', [ProduitController::class,'ajout_stock']);
 Route::put('produit/edit', [ProduitController::class,'edit']);
+//Route::get('produit.alerte/{idpartenaire}', [ProduitController::class, 'alert_stock_produit']);
 Route::get('produit.alerte/{idpartenaire}', [ProduitController::class, 'alert_stock_produit']);
 Route::resource('produits', ProduitController::class);
 
