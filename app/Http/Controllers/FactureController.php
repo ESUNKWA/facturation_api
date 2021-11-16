@@ -29,11 +29,18 @@ class FactureController extends Controller
             ->whereDate('t_ventes.created_at', $jour)
             ->orderBy('t_ventes.created_at', 'DESC')
             ->get();
-        //$factures = Facture::orderBy('created_at', 'DESC')->get();
-        $response = [
-            "status" => 1,
-            "result" => $factures
-        ];
+
+            if( count($factures) >= 1 ){
+                $response = [
+                    "status" => 1,
+                    "result" => $factures
+                ];
+            }else{
+                $response = [
+                    "status" => 0,
+                    "result" => 'Aucune vente effectuée en ce jour'
+                ];
+            }
         return response()->json($response, 200);
         /* Faire un switch case pour ramener le montant de l'avance */
     }
@@ -56,11 +63,18 @@ class FactureController extends Controller
             ->orderBy('t_ventes.created_at', 'DESC')
             ->where('t_ventes.r_client', '=', $idClient)
             ->get();
-        //$factures = Facture::orderBy('created_at', 'DESC')->get();
-        $response = [
-            "status" => 1,
-            "result" => $factures
-        ];
+        if( count($factures) >= 1 ){
+            $response = [
+                "status" => 1,
+                "result" => $factures
+            ];
+        }else{
+            $response = [
+                "status" => 0,
+                "result" => 'Pas de données'
+            ];
+        }
+        
         return response()->json($response, 200);
     }
 
@@ -84,7 +98,8 @@ class FactureController extends Controller
             "r_phone"           => $request->p_phone,
             "r_email"           => $request->p_email,
             "r_description"     => $request->p_description,
-            "r_partenaire"  =>  $request->p_partenaire
+            "r_partenaire"      =>  $request->p_partenaire,
+            "r_utilisateur"     =>  $request->p_utilisateur
 
         ]);
 
@@ -106,7 +121,9 @@ class FactureController extends Controller
                 "r_mnt"         =>  $request->p_mnt,
                 "r_status"      =>  $status,
                 "r_iscmd"       =>  $request->p_cmd,
-                "r_partenaire"  =>  $request->p_partenaire
+                "r_partenaire"  =>  $request->p_partenaire,
+                "r_utilisateur" =>  $request->p_utilisateur,
+                "r_mnt_total_achat" =>  $request->p_mntTotalAchat
                 ]);
 
                 if( $insertFacture->r_i ){

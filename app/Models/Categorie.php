@@ -10,5 +10,5 @@ class Categorie extends Model
     use HasFactory;
     protected $table = 't_categories';
     protected $primaryKey = 'r_i';
-    protected $fillable = ['r_libelle', 'r_description', 'r_status'];
+    protected $fillable = ['r_libelle', 'r_description', 'r_status','r_partenaire','r_utilisateur'];
 }

@@ -17,11 +17,7 @@ use App\Http\Controllers\ProfilUtilisaterController;
 /* Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 }); */
-/* Route::get('utilisateur/list/{partenaire}', [UtilisateurContoller::class,'show']);
-Route::post('utilisateur/register', [UtilisateurContoller::class,'store']);
 
-Route::put('utilisateur/update', [UtilisateurContoller::class,'update']);
- */
 Route::put('utilisateur.activdesact', [UtilisateurContoller::class,'activDesact']);
 Route::post('utilisateur/login', [UtilisateurContoller::class,'login']);
 Route::resource('utilisateurs', UtilisateurContoller::class);
@@ -36,17 +32,13 @@ Route::resource('profil', ProfilUtilisaterController::class);
 
 //Catégorie
 
+Route::get('categories/{partenaire}', [CategorieController::class,'catProdPaternaire']);
 Route::resource('categories', CategorieController::class);
 
 //Produits
-/* Route::get('produit/list', [ProduitController::class,'index']);
-Route::post('produit/register', [ProduitController::class,'store']);
-
-
- */
 Route::put('produit/ajout_stock', [ProduitController::class,'ajout_stock']);
 Route::put('produit/edit', [ProduitController::class,'edit']);
-// Route::get('produits/{idpartenaire}', [ProduitController::class, 'show']);
+Route::get('produit.alerte/{idpartenaire}', [ProduitController::class, 'alert_stock_produit']);
 Route::resource('produits', ProduitController::class);
 
 //Clients
@@ -73,6 +65,7 @@ Route::resource('partenaires', PartenairesController::class);
 
 //Suivie des ventes et des commandes
 Route::get('detailsvente/{idpartenaire}/{date1}/{date2}/{iscmd}', [suiviventesController::class,'suivi_vente']);
+Route::get('produitsVendus/{idpartenaire}/{idproduits}/{iscmd}/{date1}/{date2}', [suiviventesController::class,'produitsVendus']);
 
 //Authentification
 

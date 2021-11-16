@@ -189,4 +189,16 @@ class ProduitController extends Controller
     {
         //
     }
+
+    public function alert_stock_produit($idpartenaire){
+        $produits = Produit::where('r_partenaire',$idpartenaire)
+                            ->where('r_stock', '<=', 5)
+                            ->get();
+
+        $res = [
+                    "status" => 1,
+                    "result" => $produits
+                ];
+        return response()->json($res, 200);
+    }
 }

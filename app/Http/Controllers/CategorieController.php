@@ -34,9 +34,16 @@ class CategorieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function catProdPaternaire($idpartenaire)
     {
-        //
+        //Liste des catégories de produits
+        $categories = Categorie::orderBy('r_libelle', 'ASC')->where('r_partenaire',$idpartenaire)->get();
+        if( $categories ){
+            return response()->json(["status"=>1, "result" => $categories], 200);
+        }else{
+            return response()->json(["status"=>0, "result" => $this->afficheError], 200);
+        }
+
     }
 
     /**
@@ -56,8 +63,7 @@ class CategorieController extends Controller
         ];
 
         $erreurs = [
-            "r_libelle.required" => "Le libellé du produit est réquis",
-            "r_libelle.unique" => "Catégorie déjà existante"
+            "r_libelle.required" => "Le libellé du produit est réquis"
         ];
 
         //Controlle des champs
@@ -73,6 +79,8 @@ class CategorieController extends Controller
 
                 "r_libelle" => $request->r_libelle,
                 "r_description" => $request->p_description,
+                "r_utilisateur" => $request->p_utilisateur,
+                "r_partenaire" => $request->p_partenaire,
                 "r_status" => 1
 
             ]);
@@ -133,9 +141,27 @@ class CategorieController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, cr $cr)
+    public function update(Request $request, $id)
     {
-        //
+        $update = Categorie::find($id);
+
+        $update->update([
+            "r_libelle" => $request->r_libelle,
+            "r_description" => $request->r_description,
+            "r_utilisateur" => $request->r_utilisateur,
+            "r_partenaire" => $request->r_partenaire,
+            "r_status" => 1
+        ]);
+
+        if( $update ){
+
+            $responseData = [
+                "status" => 1,
+                "result" => "Modification éffectuée avec succes !",
+            ];
+
+            return response()->json($responseData, 200);
+        }
     }
 
     /**
