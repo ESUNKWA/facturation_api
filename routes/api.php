@@ -54,6 +54,7 @@ Route::get('facture/detail/{id}', [FactureController::class,'show']);
 Route::get('facture/liste_facture_client/{id}', [FactureController::class,'liste_facture_client']);
 Route::post('facture/reglement_partiel/{id}/{mnt}/{solder}/{partenaire}', [FactureController::class,'reglement_partiel']);
 Route::put('facture/update_status_facture/{status}', [FactureController::class,'update_status_facture']);
+Route::put('facture/update', [FactureController::class,'update']);
 
 
 //Dashbord

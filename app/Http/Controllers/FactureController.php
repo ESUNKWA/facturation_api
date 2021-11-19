@@ -74,7 +74,7 @@ class FactureController extends Controller
                 "result" => 'Pas de données'
             ];
         }
-        
+
         return response()->json($response, 200);
     }
 
@@ -173,14 +173,14 @@ class FactureController extends Controller
                         case 0:
                             $data = [
                                 "status" => 1,
-                                "result" => "La vente numéro à [ " . $numFacture . " ] bien été enregistrée"
+                                "result" => "La vente numéro [ " . $numFacture . " ] à bien été enregistrée"
                             ];
                             break;
 
                         case 1:
                             $data = [
                                 "status" => 1,
-                                "result" => "La commande numéro à [ " . $numFacture . " ] bien été enregistrée"
+                                "result" => "La commande numéro [ " . $numFacture . " ] à bien été enregistrée"
                             ];
                             break;
                     }
@@ -246,7 +246,7 @@ class FactureController extends Controller
         $details_facture = DB::select('SELECT
             fac.r_num, fac.r_client, fac.r_mnt, fac.r_status,
             ( SELECT SUM(rgl.r_montant) FROM t_reglement_partiele rgl WHERE rgl.r_vente = fac.r_i ) as mnt_paye,
-            det.*, prd.r_libelle as libelle_produit FROM t_ventes fac INNER JOIN t_details_ventes det ON fac.r_i = det.r_vente INNER JOIN t_produits prd ON prd.r_i = det.r_produit
+            det.*, prd.r_prix_vente, prd.r_libelle as libelle_produit FROM t_ventes fac INNER JOIN t_details_ventes det ON fac.r_i = det.r_vente INNER JOIN t_produits prd ON prd.r_i = det.r_produit
         WHERE fac.r_i = ?', [$id]);
 
             $data = [
@@ -277,9 +277,45 @@ class FactureController extends Controller
      * @param  \App\Models\rc  $rc
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, rc $rc)
+
+     //Modification des ventes par partenaire
+    public function update(Request $request)
     {
-        //
+        //Recherche de la vente
+        $facture = Facture::find($request->p_facture);
+
+        if( isset($facture) ){
+            //Modification de la vente
+            $modif_vente = $facture->update([
+                "r_mnt"                 =>  $request->p_mnt,
+                "r_utilisateur"         =>  $request->p_utilisateur,
+                "r_mnt_total_achat"     =>  $request->p_mntTotalAchat
+            ]);
+
+            if( $modif_vente ){
+                //Modification des lignes de ventes
+
+                for ($i=0; $i < count($request->p_ligneventes); $i++) {
+
+                    $produit = $request->p_ligneventes[$i];
+
+                    $updateLigneVente = DetailsFactures::find($produit['p_idlignevente']);
+
+                    $updateLigneVente->update([
+                        "r_produit"	    =>  $produit['p_idproduit'],
+                        "r_quantite"    =>  $produit['p_quantite'],
+                        "r_total"       =>  $produit['p_total'],
+                        "r_description" =>  "ras",
+                        "r_utilisateur" =>  $produit['p_utilisateur'],
+                    ]);
+
+                }
+
+                return 'ok';
+            }
+        }else{
+            return 'Vente non existant';
+        }
     }
 
     /**
