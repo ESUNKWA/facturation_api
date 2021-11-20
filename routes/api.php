@@ -49,7 +49,7 @@ Route::resource('client', ClientController::class);
 
 
 Route::post('facture/register', [FactureController::class,'store']);
-Route::get('facture/list/{iscmd}/{partenaire}/{date1}', [FactureController::class,'index']);
+Route::get('facture/list/{iscmd}/{partenaire}/{date1}/{date2}', [FactureController::class,'index']);
 Route::get('facture/detail/{id}', [FactureController::class,'show']);
 Route::get('facture/liste_facture_client/{id}', [FactureController::class,'liste_facture_client']);
 Route::post('facture/reglement_partiel/{id}/{mnt}/{solder}/{partenaire}', [FactureController::class,'reglement_partiel']);

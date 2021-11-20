@@ -18,7 +18,7 @@ class FactureController extends Controller
      * @return \Illuminate\Http\Response
      */
     //Ventes du jours
-    public function index($iscmd,$idpartenaire, $jour)
+    public function index($iscmd,$idpartenaire, $date1,$date2)
     {
         //Liste des factures
         $factures = DB::table('t_clients')
@@ -26,7 +26,7 @@ class FactureController extends Controller
             ->select('t_clients.*', 't_ventes.*')
             ->where('t_ventes.r_iscmd','=',$iscmd)
             ->where('t_ventes.r_partenaire','=',$idpartenaire)
-            ->whereDate('t_ventes.created_at', $jour)
+            ->whereBetween('t_ventes.created_at', [$date1." 00:00:00",$date2." 23:59:59"])
             ->orderBy('t_ventes.created_at', 'DESC')
             ->get();
 
