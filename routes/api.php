@@ -43,9 +43,9 @@ Route::get('produit.alerte/{idpartenaire}', [ProduitController::class, 'alert_st
 Route::resource('produits', ProduitController::class);
 
 //Clients
-//Route::resource('client', ClientController::class);
-Route::post('client/register', [ClientController::class,'store']);
-Route::get('client/list', [ClientController::class,'index']);
+Route::resource('client', ClientController::class);
+//Route::post('client/register', [ClientController::class,'store']);
+//Route::get('client/list', [ClientController::class,'index']);
 
 
 Route::post('facture/register', [FactureController::class,'store']);

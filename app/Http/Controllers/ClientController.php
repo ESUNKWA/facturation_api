@@ -67,7 +67,7 @@ class ClientController extends Controller
      */
     public function edit(cr $cr)
     {
-        //
+        
     }
 
     /**
@@ -77,9 +77,24 @@ class ClientController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, cr $cr)
+    public function update(Request $request)
     {
-        //
+        $updateclient = Client::find($request->idCLient);
+        if( $updateclient ){
+            $updateclient->update([
+                "r_nom"             => $request->p_nom,
+                "r_prenoms"         => $request->p_prenoms,
+                "r_phone"           => $request->p_phone,
+                "r_email"           => $request->p_email,
+                "r_description"     => $request->p_description,
+                "r_utilisateur"     =>  $request->p_utilisateur
+            ]);
+            $data = [
+                "status" => 1,
+                "result" => "Modification effectuée avec succès !"
+            ];
+            return response()->json($data, 200);
+        }
     }
 
     /**

@@ -185,8 +185,6 @@ class FactureController extends Controller
                             break;
                     }
 
-
-
                     return response()->json($data, 200);
 
                 }else{
@@ -311,11 +309,23 @@ class FactureController extends Controller
 
                 }
 
-                return 'ok';
+                $data = [
+                    "status" => 1,
+                    "result" => "Modification effectuée avec succès !"
+                ];
             }
         }else{
-            return 'Vente non existant';
+            $data = [
+
+                "status" => 1,
+                "result" => "Vente non existante !"
+    
+            ];
         }
+
+        
+
+        return response()->json($data, 200);
     }
 
     /**
