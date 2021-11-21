@@ -23,11 +23,6 @@ Route::post('utilisateur/login', [UtilisateurContoller::class,'login']);
 Route::resource('utilisateurs', UtilisateurContoller::class);
 
 //Proifls des utilisateurs
-// Route::get('profil/list', [ProfilUtilisaterController::class,'index']);
-// Route::post('profil/store', [ProfilUtilisaterController::class,'store']);
-// Route::put('profil/update', [ProfilUtilisaterController::class,'update']);
-//Route::resource('profilsutilisateurs', ProfilUtilisaterController::class);
-
 Route::resource('profil', ProfilUtilisaterController::class);
 
 //Catégorie
