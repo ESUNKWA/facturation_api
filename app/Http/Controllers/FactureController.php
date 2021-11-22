@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Facture;
 use App\Models\Produit;
+use App\Models\Livraison;
 use Illuminate\Http\Request;
 use App\Models\DetailsFactures;
 use App\Models\ReglementPartiel;
@@ -88,7 +89,6 @@ class FactureController extends Controller
     public function store(Request $request)
     {
         //DB::beginTransaction();
-
         //Saisie un client
         $insert = Client::create([
 
@@ -105,7 +105,7 @@ class FactureController extends Controller
 
          //Saisie facture
         if( $insert->r_i ){
-
+            
             $latestOrder = Facture::orderBy('r_i')->count(); // Avoir le nombre d'enregistrement des factures
             $numFacture = date('y')."-".str_pad($latestOrder+1, 5, "0", STR_PAD_LEFT);
 
@@ -146,7 +146,17 @@ class FactureController extends Controller
                             "r_partenaire"  =>  $request->p_partenaire
                         ]);
 
-
+                            
+                        if( $request->p_livraison !== null ){
+                            Livraison::create([
+                                "r_vente"     =>  $insertFacture->r_i,
+                                "r_ville"	    =>  $request->p_livraison["p_ville"],
+                                "r_quartier"    =>  $request->p_livraison["p_quartier"],
+                                "r_frais"       =>  $request->p_livraison["p_frais"],
+                                "r_status" =>  "ras",
+                                "r_situa_geo"  =>  $request->p_livraison["p_situation_geo"]
+                            ]);
+                        }
                         // Mise à jour stok produits
 
                         if( $insertlgnFacture->r_i ){
