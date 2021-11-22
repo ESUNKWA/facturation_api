@@ -8,10 +8,12 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\LivraisaonController;
 use App\Http\Controllers\UtilisateurContoller;
 use App\Http\Controllers\PartenairesController;
 use App\Http\Controllers\suiviventesController;
 use App\Http\Controllers\ProfilUtilisaterController;
+use App\Http\Controllers\DetailsFactureController;
 
 
 /* Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -33,7 +35,6 @@ Route::resource('categories', CategorieController::class);
 //Produits
 Route::put('produit/ajout_stock', [ProduitController::class,'ajout_stock']);
 Route::put('produit/edit', [ProduitController::class,'edit']);
-//Route::get('produit.alerte/{idpartenaire}', [ProduitController::class, 'alert_stock_produit']);
 Route::get('produit.alerte/{idpartenaire}', [ProduitController::class, 'alert_stock_produit']);
 Route::resource('produits', ProduitController::class);
 
@@ -67,3 +68,11 @@ Route::get('produitsVendus/{idpartenaire}/{idproduits}/{iscmd}/{date1}/{date2}',
 //Authentification
 
 Route::resource('auth', authController::class);
+
+//Détails
+Route::resource('details/ventes/{idvente}', DetailsFactureController::class);
+
+
+//Livraison
+Route::get('livraisons/details/{idvente}', [LivraisaonController::class,'details_produits_livraison']);
+Route::resource('livraisons', LivraisaonController::class);

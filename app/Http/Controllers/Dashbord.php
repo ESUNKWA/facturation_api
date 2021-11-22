@@ -18,7 +18,7 @@ class Dashbord extends Controller
     {
 
         $dashData = DB::select("SELECT COALESCE(SUM(vt.r_mnt),0) as ventejr,
-        ( SELECT COALESCE(SUM(rgl.r_montant),0) FROM t_ventes vt INNER JOIN t_reglement_partiele rgl ON vt.r_i = rgl.r_vente WHERE vt.r_status = 0 AND vt.r_iscmd = 0 AND vt.r_partenaire = ? ) as reglPartielJr,
+        ( SELECT COALESCE(SUM(rgl.r_montant),0) FROM t_ventes vt INNER JOIN t_reglement_partiele rgl ON vt.r_i = rgl.r_vente WHERE vt.r_status = 0 AND vt.r_iscmd = 0 AND vt.r_partenaire = ? AND DATE(vt.created_at) = DATE(CURRENT_DATE())) as reglPartielJr,
         ( SELECT COALESCE(SUM(vt.r_mnt),0) FROM t_ventes vt WHERE vt.r_status = 0 AND vt.r_iscmd = 0 AND vt.r_partenaire = ? AND DATE(vt.created_at) = DATE(CURRENT_DATE())) as venteNonSoldees,
         ( SELECT COALESCE(SUM(vt.r_mnt),0) FROM t_ventes vt WHERE vt.r_status = 2 AND vt.r_partenaire = ? AND vt.r_iscmd = 1 AND DATE(vt.created_at) = DATE(CURRENT_DATE()) ) as totalCmdJr
         FROM t_ventes vt WHERE vt.r_status = 1 AND vt.r_partenaire = ? AND DATE(vt.created_at) = DATE(CURRENT_DATE())", [$idpartenaire,$idpartenaire,$idpartenaire,$idpartenaire]);

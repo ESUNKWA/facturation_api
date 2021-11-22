@@ -13,9 +13,9 @@ class DetailsFactureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($idvente)
     {
-        
+
     }
 
     /**
@@ -36,7 +36,7 @@ class DetailsFactureController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -45,9 +45,15 @@ class DetailsFactureController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function show(cr $cr)
+    public function show($idvente)
     {
-        //
+        $factures = DB::table('t_details_ventes')
+            ->orderBy('t_ventes.created_at', 'DESC')
+            ->where('t_details_ventes.r_vente', '=', $idvente)
+            ->get();
+
+
+            return $factures;
     }
 
     /**
