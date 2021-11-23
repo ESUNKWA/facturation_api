@@ -54,33 +54,64 @@ class LivraisaonController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function show($idpartenaire)
+    public function show($idpartenaire, $date1, $date2)
     {
-        $livraison = DB::select("SELECT vt.r_i, vt.r_num, vt.r_partenaire , lvr.r_vente, lvr.r_quartier, lvr.r_situa_geo,
-                                     lvr.r_frais, lvr.created_at, lvr.updated_at,
-                                 CASE lvr.r_status
-                                    WHEN 0 THEN 'En cours de livraison'
-                                    WHEN 1 THEN 'Livré'
-                                 END AS etat_livraison    FROM t_livraison lvr
+        $livraison = DB::select("SELECT DISTINCT lvr.r_i, vt.r_num, vt.r_partenaire , lvr.r_vente, lvr.r_quartier, lvr.r_situa_geo,
+                                     lvr.r_frais, lvr.created_at, lvr.updated_at, lvr.r_status    FROM t_livraison lvr
                                  INNER JOIN t_ventes vt ON vt.r_i = lvr.r_vente
-                                 WHERE vt.r_partenaire = ? ", [$idpartenaire]);
+                                 WHERE vt.r_partenaire = ? AND lvr.created_at BETWEEN ? AND ? ", [$idpartenaire, $date1." 00:00:00", $date2." 23:59:59"]);
 
-        $data = [
 
-            "status" => 1,
-            "result" => $livraison
+        if( $livraison ){
+            $data = [
 
-        ];
+                "status" => 1,
+                "result" => $livraison
+
+            ];
+        }else{
+            $data = [
+
+                "status" => 0,
+                "result" => ["Aucune livraison pour cette période"]
+
+            ];
+        }
+
 
         return $data;
     }
 
     //Détails livraison
-    public function details_produits_livraison($idvente){
+    public function details_produits_livraison($idvente, $date1, $date2){
 
         $details = DetailsFactureController::orderBy('created_at', 'DESC')
                                             ->where('r_vente',[$idvente])->get();
         return $details;
+    }
+
+     //reglement total de la facture
+     public function update_status_livraison($idlivraison, $status){
+
+        $updateStatusVente = Livraison::findOrFail($idlivraison);
+
+        $updateStatusVente->update([
+            "r_status" => $status
+        ]);
+
+        if( $status == 1 ){
+            $data = [
+                "status" => 1,
+                "result" => "Livraison terminée"
+            ];
+        }else{
+            $data = [
+                "status" => 1,
+                "result" => "Livraison annulée"
+            ];
+        }
+        return response()->json($data, 200);
+
     }
 
     /**

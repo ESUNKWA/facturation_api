@@ -69,10 +69,12 @@ Route::get('produitsVendus/{idpartenaire}/{idproduits}/{iscmd}/{date1}/{date2}',
 
 Route::resource('auth', authController::class);
 
-//Détails
-Route::resource('details/ventes/{idvente}', DetailsFactureController::class);
+
+Route::get('livraisons/details/{idvente}/{date1}/{date2}', [DetailsFactureController::class,'show']);//Détails vente
+Route::resource('details/ventes', DetailsFactureController::class);
 
 
-//Livraison
-Route::get('livraisons/details/{idvente}', [LivraisaonController::class,'details_produits_livraison']);
+
+Route::get('livraisons/{idpartenaire}/{date1}/{date2}', [LivraisaonController::class,'show']);//Livraisons
+Route::put('livraisons/updatestatus/{idlivraison}/{status}', [LivraisaonController::class,'update_status_livraison']);//Update status
 Route::resource('livraisons', LivraisaonController::class);
