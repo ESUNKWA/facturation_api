@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Dashbord;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\authController;
+use App\Http\Controllers\stockController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\FactureController;
 use App\Http\Controllers\ProduitController;
@@ -12,8 +13,8 @@ use App\Http\Controllers\LivraisaonController;
 use App\Http\Controllers\UtilisateurContoller;
 use App\Http\Controllers\PartenairesController;
 use App\Http\Controllers\suiviventesController;
-use App\Http\Controllers\ProfilUtilisaterController;
 use App\Http\Controllers\DetailsFactureController;
+use App\Http\Controllers\ProfilUtilisaterController;
 
 
 /* Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -78,3 +79,6 @@ Route::resource('details/ventes', DetailsFactureController::class);
 Route::get('livraisons/{idpartenaire}/{date1}/{date2}', [LivraisaonController::class,'show']);//Livraisons
 Route::put('livraisons/updatestatus/{idlivraison}/{status}', [LivraisaonController::class,'update_status_livraison']);//Update status
 Route::resource('livraisons', LivraisaonController::class);
+
+//Stock
+Route::resource('stock', stockController::class);
