@@ -58,12 +58,14 @@ class CategorieController extends Controller
 
         $inputs = $request->all();
 
+
         $errors = [
-            "r_libelle" => "required|unique:t_categories"
+            "r_libelle" => "required",
         ];
 
         $erreurs = [
-            "r_libelle.required" => "Le libellé du produit est réquis"
+            "r_libelle.required" => "Le libellé du produit est réquis",
+            //"r_partenaire.unique,r_libelle.unique" => "Catégorie déjà existante",
         ];
 
         //Controlle des champs

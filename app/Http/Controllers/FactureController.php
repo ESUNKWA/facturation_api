@@ -39,7 +39,7 @@ class FactureController extends Controller
             }else{
                 $response = [
                     "status" => 0,
-                    "result" => 'Aucune vente effectuée en ce jour'
+                    "result" => ['Aucune vente effectuée en ce jour']
                 ];
             }
         return response()->json($response, 200);

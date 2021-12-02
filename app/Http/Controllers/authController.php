@@ -38,10 +38,10 @@ class authController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         try {
 
-        
+
             // Validation des données
             $errors = [
                 'p_login' => 'required',
@@ -52,7 +52,7 @@ class authController extends Controller
                 'p_mdp.required' => 'Veuillez saisir votre mot de passe',
             ];
 
-      
+
             $validate = Validator::make($request->all(), $errors, $erreurs);
 
 
@@ -61,42 +61,42 @@ class authController extends Controller
             }
 
             $login = Utilisateur::where('r_login', $request->p_login)
-                                ->where('r_mdp', $request->p_mdp)
+                                ->where('r_mdp', MD5($request->p_mdp))
                                 ->get();
 
 
             if( count($login) >= 1 ){
 
-                
+
                 $partenaire = $login[0]->r_partenaire;
-                
+
                 $statusPartenaire = Partenaires::where('r_i', $partenaire)->get();
-                
-                
+
+
 
                 if( $statusPartenaire[0]->r_status == 1 ){
 
                     switch( $login[0]->r_status ){
 
                         case 0:
-    
+
                             return response()->json(['status'=>-100, 'result'=>'Votre compte est inactif, veuillez contacter l\'éditeur']);
-    
+
                             break;
-    
+
                         case 1:
-    
+
                             return response()->json(['status'=>1, 'result'=>$login]);
-    
+
                             break;
-    
+
                     }
 
                 }else{
                     return response()->json(['status'=>-100, 'result'=>'Votre structure à été bloquée, veuillez contacter l\'éditeur']);
                 }
 
-                
+
 
             }else{
 
@@ -106,7 +106,7 @@ class authController extends Controller
 
 
             $login = Utilisateur::where('r_login', $request->p_login)
-                                    ->where('r_mdp', $request->p_mdp)
+                                    ->where('r_mdp', MD5($request->p_mdp))
                                     ->get();
 
 
@@ -135,10 +135,10 @@ class authController extends Controller
             }
 
         } catch (Exception  $e) {
-            
+
             echo $e->getMessage();
         }
-        
+
     }
 
     /**
