@@ -255,7 +255,10 @@ class FactureController extends Controller
         $details_facture = DB::select('SELECT
             fac.r_num, fac.r_client, fac.r_mnt, fac.r_status,
             ( SELECT SUM(rgl.r_montant) FROM t_reglement_partiele rgl WHERE rgl.r_vente = fac.r_i ) as mnt_paye,
-            det.*, prd.r_prix_vente, prd.r_libelle as libelle_produit FROM t_ventes fac INNER JOIN t_details_ventes det ON fac.r_i = det.r_vente INNER JOIN t_produits prd ON prd.r_i = det.r_produit
+            det.*, prd.r_prix_vente, prd.r_libelle as libelle_produit 
+            FROM t_ventes fac 
+            INNER JOIN t_details_ventes det ON fac.r_i = det.r_vente 
+            INNER JOIN t_produits prd ON prd.r_i = det.r_produit
         WHERE fac.r_i = ?', [$id]);
 
             $data = [

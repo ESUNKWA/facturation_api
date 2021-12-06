@@ -33,10 +33,8 @@ class Dashbord extends Controller
        $this->res = array_merge($dashData, $chiffre_aff_mois, [$topsVendu]);
 
         $data = [
-
             "status" => 1,
             "result" => $this->res
-
         ];
 
         return $data;

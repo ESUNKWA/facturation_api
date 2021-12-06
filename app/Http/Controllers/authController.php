@@ -66,15 +66,12 @@ class authController extends Controller
 
 
             if( count($login) >= 1 ){
+                
+                $partenaireId = $login[0]->r_partenaire;
 
+                $partenaire = $this->infoPartenaire($partenaireId);
 
-                $partenaire = $login[0]->r_partenaire;
-
-                $statusPartenaire = Partenaires::where('r_i', $partenaire)->get();
-
-
-
-                if( $statusPartenaire[0]->r_status == 1 ){
+                if( $partenaire[0]->r_status == 1 ){
 
                     switch( $login[0]->r_status ){
 
@@ -85,7 +82,9 @@ class authController extends Controller
                             break;
 
                         case 1:
-
+                            //$partenaire[] = $login;
+                            $login[] = $partenaire;
+                            
                             return response()->json(['status'=>1, 'result'=>$login]);
 
                             break;
@@ -97,36 +96,6 @@ class authController extends Controller
                 }
 
 
-
-            }else{
-
-                return response()->json(['status'=>0, 'result'=>'Login ou Mot de passe incorrecte !']);
-
-            }
-
-
-            $login = Utilisateur::where('r_login', $request->p_login)
-                                    ->where('r_mdp', MD5($request->p_mdp))
-                                    ->get();
-
-
-            if( count($login) >= 1 ){
-
-                switch( $login[0]->r_status ){
-
-                    case 0:
-
-                        return response()->json(['status'=>-100, 'result'=>'Votre compte est inactif, veuillez contacter l\'éditeur']);
-
-                        break;
-
-                    case 1:
-
-                        return response()->json(['status'=>1, 'result'=>$login]);
-
-                        break;
-
-                }
 
             }else{
 
@@ -184,5 +153,10 @@ class authController extends Controller
     public function destroy(rc $rc)
     {
         //
+    }
+
+    public function infoPartenaire($partenaireId){
+        $data = Partenaires::where('r_i', $partenaireId)->get();
+        return $data;
     }
 }
