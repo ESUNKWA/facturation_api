@@ -107,4 +107,28 @@ class ClientController extends Controller
     {
         //
     }
+
+    public function liste_clients($idpartenaire, $date1, $date2)
+    {
+        //Liste des clients
+        $clients = Client::orderBy('r_nom', 'ASC')
+                            ->where('r_partenaire', $idpartenaire)
+                            ->whereBetween('created_at', [$date1." 00:00:00", $date2." 23:59:59"])
+                            ->get();
+
+        if( count($clients) >= 1 ){
+            $responseDatas = [
+                "status" => 1,
+                "result" => $clients
+              ];
+        }else{
+            $responseDatas = [
+                "status" => 0,
+                "result" => "Aucun client enregistré pendant cette période"
+              ];
+        }
+        
+        
+        return response()->json($responseDatas, 200);
+    }
 }

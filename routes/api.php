@@ -42,7 +42,7 @@ Route::resource('produits', ProduitController::class);
 //Clients
 Route::resource('client', ClientController::class);
 //Route::post('client/register', [ClientController::class,'store']);
-//Route::get('client/list', [ClientController::class,'index']);
+Route::get('client/list/{idpartenaire}/{date1}/{date2}', [ClientController::class,'liste_clients']);
 
 
 Route::post('facture/register', [FactureController::class,'store']);
