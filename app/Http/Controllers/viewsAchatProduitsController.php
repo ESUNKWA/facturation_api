@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\cr;
-use App\Models\Produit;
 use Illuminate\Http\Request;
-use App\Models\AchatsProduits;
 
-class stockController extends Controller
+use App\Models\AchatsProduits;
+use Illuminate\Support\Facades\DB;
+class viewsAchatProduitsController extends Controller
 {
-    private $afficheError = "Une erreur est survenue !";
     /**
      * Display a listing of the resource.
      *
@@ -38,36 +37,7 @@ class stockController extends Controller
      */
     public function store(Request $request)
     {
-        $addStock = AchatsProduits::create([
-            'r_partenaire' => $request->p_partenaire,
-            'r_produit' => $request->p_produit,
-            'r_utilisateur' => $request->p_utilisateur,
-            'r_quantite' => $request->p_quantite,
-            'r_mnt' => $request->p_mnt
-        ]);
-
-        if( $addStock->r_i ){
-
-            $updateStock = Produit::find($request->p_produit);
-
-            $updateStock->update([
-                "r_stock" => $request->p_newStock
-            ]);
-
-            $responseData = [
-                "status" => 1,
-                "result" => "Stock mise à jour !",
-            ];
-
-            return response()->json($responseData, 200);
-        }else{
-            $responseData = [
-                "status" => 0,
-                "result" => $this->afficheError,
-            ];
-
-            return response()->json($responseData, 200);
-        }
+        //
     }
 
     /**
@@ -76,9 +46,10 @@ class stockController extends Controller
      * @param  \App\Models\cr  $cr
      * @return \Illuminate\Http\Response
      */
-    public function show(cr $cr)
+    public function show()
     {
-        //
+     
+      
     }
 
     /**
@@ -113,5 +84,14 @@ class stockController extends Controller
     public function destroy(cr $cr)
     {
         //
+    }
+    //Liste des produits achétés sur une période par partenaire
+    public function consultAchatProduits($idpartenaire, $date1, $date2){
+        $achatProduits = DB::table('t_achat_produits')
+        ->join('t_produits','t_produits.r_i', 't_achat_produits.r_produit')
+        ->select('t_achat_produits.*','t_produits.r_libelle')
+        ->whereBetween('t_achat_produits.created_at', [$date1." 00:00:00", $date2." 23:59:59"])
+        ->get();
+        return $achatProduits;
     }
 }

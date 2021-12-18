@@ -15,6 +15,7 @@ use App\Http\Controllers\PartenairesController;
 use App\Http\Controllers\suiviventesController;
 use App\Http\Controllers\DetailsFactureController;
 use App\Http\Controllers\ProfilUtilisaterController;
+use App\Http\Controllers\viewsAchatProduitsController;
 
 
 /* Route::middleware('auth:api')->get('/user', function (Request $request) {
@@ -75,10 +76,13 @@ Route::get('livraisons/details/{idvente}/{date1}/{date2}', [DetailsFactureContro
 Route::resource('details/ventes', DetailsFactureController::class);
 
 
-
 Route::get('livraisons/{idpartenaire}/{date1}/{date2}', [LivraisaonController::class,'show']);//Livraisons
 Route::put('livraisons/updatestatus/{idlivraison}/{status}', [LivraisaonController::class,'update_status_livraison']);//Update status
 Route::resource('livraisons', LivraisaonController::class);
 
 //Stock
 Route::resource('stock', stockController::class);
+
+//Consultation des achats produits
+Route::resource('views', viewsAchatProduitsController::class);
+Route::get('viewsachats/{idpartenaire}/{date1}/{date2}', [viewsAchatProduitsController::class,'consultAchatProduits']);
