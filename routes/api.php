@@ -86,3 +86,5 @@ Route::resource('stock', stockController::class);
 //Consultation des achats produits
 Route::resource('views', viewsAchatProduitsController::class);
 Route::get('viewsachats/{idpartenaire}/{date1}/{date2}', [viewsAchatProduitsController::class,'consultAchatProduits']);
+Route::get('viewsachatsrgpmt/{idpartenaire}/{date1}/{date2}', [viewsAchatProduitsController::class,'regpmntAchatProduits']);
+Route::get('viewsachatsparproduit/{idpartenaire}/{idproduit}/{date1}/{date2}', [viewsAchatProduitsController::class,'Achat_par_produits']);

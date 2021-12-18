@@ -90,8 +90,66 @@ class viewsAchatProduitsController extends Controller
         $achatProduits = DB::table('t_achat_produits')
         ->join('t_produits','t_produits.r_i', 't_achat_produits.r_produit')
         ->select('t_achat_produits.*','t_produits.r_libelle')
+        ->where('t_achat_produits.r_partenaire',$idpartenaire)
         ->whereBetween('t_achat_produits.created_at', [$date1." 00:00:00", $date2." 23:59:59"])
         ->get();
-        return $achatProduits;
+        if( count($achatProduits) >= 1 ){
+            $responseDatas = [
+                "status" => 1,
+                "result" => $achatProduits
+              ];
+        }else{
+            $responseDatas = [
+                "status" => 0,
+                "result" => "Aucun achat éffectué pendant cette période"
+              ];
+        }
+        
+        return response()->json($responseDatas, 200);
+    }
+
+    //regroupement des produits achétés sur une période par partenaire
+    public function regpmntAchatProduits($idpartenaire, $date1, $date2){
+        $achatProduits = DB::select("SELECT SUM(ach.r_mnt) as mnt_achat, prd.r_libelle, COUNT(ach.r_produit) as nbre_achat FROM t_achat_produits ach
+        INNER JOIN t_produits prd ON prd.r_i = ach.r_produit
+        WHERE ach.r_partenaire = ? 
+        AND ach.created_at BETWEEN ? AND ? GROUP BY prd.r_libelle", [$idpartenaire, $date1." 00:00:00", $date2." 23:59:59"]);
+        if( count($achatProduits) >= 1 ){
+            $responseDatas = [
+                "status" => 1,
+                "result" => $achatProduits
+              ];
+        }else{
+            $responseDatas = [
+                "status" => 0,
+                "result" => "Aucun achat éffectué pendant cette période"
+              ];
+        }
+        
+        return response()->json($responseDatas, 200);
+    }
+
+    //Liste des achats par produits
+    public function Achat_par_produits($idpartenaire, $idpproduit, $date1, $date2){
+        $achatProduits = DB::table('t_achat_produits')
+        ->join('t_produits','t_produits.r_i', 't_achat_produits.r_produit')
+        ->select('t_achat_produits.*','t_produits.r_libelle')
+        ->where('t_achat_produits.r_partenaire',$idpartenaire)
+        ->where('t_achat_produits.r_produit',$idpproduit)
+        ->whereBetween('t_achat_produits.created_at', [$date1." 00:00:00", $date2." 23:59:59"])
+        ->get();
+        if( count($achatProduits) >= 1 ){
+            $responseDatas = [
+                "status" => 1,
+                "result" => $achatProduits
+              ];
+        }else{
+            $responseDatas = [
+                "status" => 0,
+                "result" => "Aucun achat éffectué pendant cette période"
+              ];
+        }
+        
+        return response()->json($responseDatas, 200);
     }
 }
