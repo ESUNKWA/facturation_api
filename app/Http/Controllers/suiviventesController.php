@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Models\DetailsFactures;
+
 class suiviventesController extends Controller
 {
+    //Regropement des ventes par produits
     public function suivi_vente($idpartenaire, $date1, $date2, $iscmd){
 
         $details_ventes = DB::select("SELECT prd.r_i, prd.r_libelle, SUM(dt.r_quantite) as totalVendu, 
@@ -34,6 +37,7 @@ class suiviventesController extends Controller
 
     }
 
+    //Détails des ventes par produits
     public function produitsVendus($idpartenaire, $idproduits, $iscmd, $date1 , $date2){
         $prodVendu = DB::select("SELECT vt.r_num, cli.r_nom, cli.r_prenoms, prd.r_libelle, dt.r_quantite, dt.r_total, dt.created_at 
         FROM t_details_ventes dt
@@ -47,6 +51,20 @@ class suiviventesController extends Controller
             "result"=>$prodVendu
         ];
         return response()->json($data,200);
+    }
+
+    //Liste des ventes par période
+    public function liste_ventes($idpartenaire, $iscmd, $date1, $date2){
+        $ventes = Db::table('t_details_ventes')
+        ->join('t_produits', 't_produits.r_i', 't_details_ventes.r_produit')
+        ->join('t_ventes', 't_ventes.r_i', 't_details_ventes.r_vente')
+        ->select('t_produits.r_libelle', 't_details_ventes.r_quantite','t_details_ventes.r_total','t_details_ventes.created_at',)
+        ->where('t_details_ventes.r_partenaire', $idpartenaire)
+        ->where('t_ventes.r_iscmd', $iscmd)
+        ->whereBetween('t_details_ventes.created_at', [$date1." 00:00:00", $date2." 23:59:59"])
+        ->orderBy('t_details_ventes.created_at', 'DESC')
+        ->get();
+        return $ventes;
     }
 
 }

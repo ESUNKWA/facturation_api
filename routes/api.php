@@ -66,6 +66,7 @@ Route::resource('partenaires', PartenairesController::class);
 //Suivie des ventes et des commandes
 Route::get('detailsvente/{idpartenaire}/{date1}/{date2}/{iscmd}', [suiviventesController::class,'suivi_vente']);
 Route::get('produitsVendus/{idpartenaire}/{idproduits}/{iscmd}/{date1}/{date2}', [suiviventesController::class,'produitsVendus']);
+Route::get('liste_ventes/{idpartenaire}/{iscmd}/{date1}/{date2}', [suiviventesController::class,'liste_ventes']);
 
 //Authentification
 
