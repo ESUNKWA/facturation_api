@@ -64,7 +64,20 @@ class suiviventesController extends Controller
         ->whereBetween('t_details_ventes.created_at', [$date1." 00:00:00", $date2." 23:59:59"])
         ->orderBy('t_details_ventes.created_at', 'DESC')
         ->get();
-        return $ventes;
+        
+        if( count($ventes) >= 1 ){
+            $data = [
+                "status"=>1,
+                "result"=>$ventes
+            ];
+            return response()->json($data,200);
+        }else{
+            $data = [
+                "status"=>0,
+                "result"=>"Aucune données pour cette période"
+            ];
+            return response()->json($data,200);
+        }
     }
 
 }
