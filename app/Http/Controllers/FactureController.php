@@ -115,14 +115,15 @@ class FactureController extends Controller
                     $status = ( $request->p_mnt_partiel == 0 )? 1 : 0;
                 }
 
-                $insertFacture  = Facture::create([
-                "r_num"         =>  $numFacture,
-                "r_client"      =>  $insert->r_i,
-                "r_mnt"         =>  $request->p_mnt,
-                "r_status"      =>  $status,
-                "r_iscmd"       =>  $request->p_cmd,
-                "r_partenaire"  =>  $request->p_partenaire,
-                "r_utilisateur" =>  $request->p_utilisateur,
+                $insertFacture      = Facture::create([
+                "r_num"             =>  $numFacture,
+                "r_client"          =>  $insert->r_i,
+                "r_mnt"             =>  $request->p_mnt,
+                "r_remise"          =>  $request->p_remise,
+                "r_status"          =>  $status,
+                "r_iscmd"           =>  $request->p_cmd,
+                "r_partenaire"      =>  $request->p_partenaire,
+                "r_utilisateur"     =>  $request->p_utilisateur,
                 "r_mnt_total_achat" =>  $request->p_mntTotalAchat
                 ]);
 
