@@ -38,10 +38,10 @@ class CategorieController extends Controller
     {
         //Liste des catégories de produits
         $categories = Categorie::orderBy('r_libelle', 'ASC')->where('r_partenaire',$idpartenaire)->get();
-        if( $categories ){
+        if( count($categories) >= 1 ){
             return response()->json(["status"=>1, "result" => $categories], 200);
         }else{
-            return response()->json(["status"=>0, "result" => $this->afficheError], 200);
+            return response()->json(["status"=>0, "result" => "Aucune catégorie de produits trouvés"], 200);
         }
 
     }

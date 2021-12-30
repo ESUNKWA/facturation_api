@@ -114,10 +114,11 @@ class ProduitController extends Controller
         //Liste des produits
         $produits = Produit::orderBy('r_libelle', 'ASC')->where('r_partenaire',$idpartenaire)->get();
 
-        $res = [
-            "status" => 1,
-            "result" => $produits
-        ];
+        if( count($produits) >= 1 ){
+            return response()->json(["status"=>1, "result" => $produits], 200);
+        }else{
+            return response()->json(["status"=>0, "result" => "Aucun produit trouvé"], 200);
+        }
 
         return response()->json($res, 200);
     }
@@ -137,7 +138,7 @@ class ProduitController extends Controller
         $updateProduit->update([
             "r_categorie"  => $request->p_categorie,
             "r_libelle" => $request->r_libelle,
-            "r_stock" => $request->p_stock,
+            "r_stock" => 0,
             "r_prix_vente"  => $request->p_prix_vente,
             "r_description" => $request->p_description
         ]);

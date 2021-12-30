@@ -39,7 +39,7 @@ class FactureController extends Controller
             }else{
                 $response = [
                     "status" => 0,
-                    "result" => ['Aucune vente effectuée en ce jour']
+                    "result" => 'Aucune vente effectuée en ce jour'
                 ];
             }
         return response()->json($response, 200);
@@ -124,7 +124,8 @@ class FactureController extends Controller
                 "r_iscmd"           =>  $request->p_cmd,
                 "r_partenaire"      =>  $request->p_partenaire,
                 "r_utilisateur"     =>  $request->p_utilisateur,
-                "r_mnt_total_achat" =>  $request->p_mntTotalAchat
+                "r_mnt_total_achat" =>  $request->p_mntTotalAchat,
+                "r_mnt_partiel_payer" =>  $request->p_mnt_partiel_payer,
                 ]);
 
                 if( $insertFacture->r_i ){
@@ -217,31 +218,34 @@ class FactureController extends Controller
             "r_montant" => $mnt_partiel,
             "r_partenaire"  =>  $idpartenaire
         ]);
+       return  $this->update_status_facture($idfacture, $mnt_partiel, $solder);
+            
+    }
 
-        if($solder == 1){
-             $this->update_status_facture($idfacture);
-
+    //reglement total de la facture
+    public function update_status_facture($idfacture, $mnt_partiel, $solder){
+        $updateStatusFacture = Facture::find($idfacture);
+        $mntPaye = $updateStatusFacture->r_mnt_partiel_payer;
+        if( $solder == 1 ){
+            $updateStatusFacture->update([
+                "r_status" => 1,
+                "r_mnt_partiel_payer" => $mntPaye + $mnt_partiel,
+            ]);
             $data = [
                 "status" => 1,
                 "result" => "La facture a étée soldée !"
             ];
             return response()->json($data, 200);
-        } else {
+        }else{
+           /*  $updateStatusFacture->update([
+                "r_mnt_partiel_payer" => $mntPaye + $mnt_partiel,
+            ]); */
             $res = [
                 "status" => 1,
                 "result" => "Enregistrement effectué avec succès !"
             ];
             return response()->json($res, 200);
         }
-
-    }
-
-    //reglement total de la facture
-    public function update_status_facture($idfacture){
-        $updateStatusFacture = Facture::find($idfacture);
-        $updateStatusFacture->update([
-            "r_status" => 1
-        ]);
     }
 
     /**
